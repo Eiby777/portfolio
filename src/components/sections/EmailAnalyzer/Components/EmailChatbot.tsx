@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
-import { FaRobot, FaUser, FaPaperPlane, FaLightbulb, FaList, FaQuestionCircle } from 'react-icons/fa';
+import { FaRobot, FaPaperPlane, FaLightbulb, FaList, FaQuestionCircle } from 'react-icons/fa';
 
 // Gmail-inspired color scheme
 const colors = {
@@ -271,7 +271,7 @@ const EmailChatbot: React.FC = () => {
     }, 1000);
   };
 
-  const handleActionButtonClick = (actionId: string, text: string) => {
+  const handleActionButtonClick = (_actionId: string, text: string) => {
     handleSendMessage(text);
   };
 

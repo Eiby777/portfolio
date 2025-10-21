@@ -1,0 +1,89 @@
+Delivered-To: abisaymedinarosario@gmail.com
+Received: by 2002:a05:6358:f909:b0:238:16f0:2989 with SMTP id kv9csp10255739rwb;
+        Tue, 21 Oct 2025 04:28:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhlesK7qW3wu62YaWpBwLsOf0TVZs1/9dIu/ACVK9MLuU7HJKhPg8CfTcPIOnwAQqs30Iw
+X-Received: by 2002:a05:6a00:1895:b0:77d:13e3:cd08 with SMTP id d2e1a72fcca58-7a220a31668mr19263265b3a.5.1761046083893;
+        Tue, 21 Oct 2025 04:28:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1761046083; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QKOghdK1DSoVzxxN6OYcm8ug6JP4JmsHxUuRoxx+wxCXAd9Hf6RelNG74JICzkA0qC
+         ovFv6q59PogCYR4WLteGWNj/IRhaFE7HfmWSHm78+CRBQcZsWvjaDDmv2qTjffCwF7mu
+         I7hgnfnS8iC7B60UPH2DD2J/Mw6GZ8eSTV0QT+Ql+y4iDCNyCKjAe1BSITa53dqhWHvM
+         TSCFk+HWeEMwCXl+cc5sCE0FNBnjtpIQgwizuR3UIQQw3oT0TM6Ut47yLXCjXQRYvazo
+         j3t/RqkYl3TVBpKX+eOjHBGPcOr3fmWisgbKR2924FC+HpOgFP13DAqm81q6Xg/GYk4s
+         /lpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=date:message-id:subject:to:reply-to:from:dkim-signature;
+        bh=xD3hKpZcM7h47UjEhy90Gm0G6vAlwD0JRDbFlTCgkqI=;
+        fh=9EHgChklo1TgOu+1N4Jbcoqb5dKkeCPYVTxW40cjJZs=;
+        b=G3UzPGBZTRcBWO7ljQvbcZuxq3Ix+F+7CGinyiuULDP0RkKUIkm58xy9ysjqiNGQPC
+         lOccEzBM9Azqwugw9EoBNs+tnkCD9F81qPYZJ1woslOyP2MZKkdG24Rny/j1RgST7/3g
+         xuCnCP3jLPJzzbjAghSaZ6PACB3GkW4px2BdgHS3uIrrjQH+27ge24jYXex2zb9DAlZf
+         ZCsqVpuA40vufaLGHuokxnHL5JPjFKJ0LX3ZFoFsiK25Y2e5X1ooY9U17rX8ydQg8pHU
+         dyGwpDo8Bu1PwoiUWO096HobNu61Hp/pKY/Ju+EXHwc3SpW2t0KRo0witYtfUfLtKAUC
+         HyuQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@intensedebatemail.com header.s=automattic1 header.b=ll5LebIx;
+       spf=pass (google.com: domain of notifications@intensedebatemail.com designates 192.0.115.115 as permitted sender) smtp.mailfrom=notifications@intensedebatemail.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=intensedebatemail.com
+Return-Path: <notifications@intensedebatemail.com>
+Received: from lb2.bur.intensedebate.com (lb2.bur.intensedebate.com. [192.0.115.115])
+        by mx.google.com with ESMTPS id d2e1a72fcca58-7a2300fd8b0si6395147b3a.570.2025.10.21.04.28.03
+        for <abisaymedinarosario@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Oct 2025 04:28:03 -0700 (PDT)
+Received-SPF: pass (google.com: domain of notifications@intensedebatemail.com designates 192.0.115.115 as permitted sender) client-ip=192.0.115.115;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@intensedebatemail.com header.s=automattic1 header.b=ll5LebIx;
+       spf=pass (google.com: domain of notifications@intensedebatemail.com designates 192.0.115.115 as permitted sender) smtp.mailfrom=notifications@intensedebatemail.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=intensedebatemail.com
+Received: from jobs1.bur.intensedebate.com (unknown [192.0.116.84])
+	by lb2.bur.intensedebate.com (Postfix) with ESMTP id 735BD980D81
+	for <abisaymedinarosario@gmail.com>; Tue, 21 Oct 2025 11:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=intensedebatemail.com; s=automattic1; t=1761046083;
+	bh=p+DGxzMPNYdBT5x48Pd7CF4aEpxbTsZl0mMEd6Cta+Q=;
+	h=From:Reply-To:To:Subject:Date:From;
+	b=ll5LebIxlJ4sdvDWq7Qg2pHgL3APih85RYN76xmKs2EDGzrRtN9Vs9hZZMGXV9ETL
+	 W95iMUwtVyV+D42lDYtltJscDGUz91buCrPfh2xeSaYZMKVgmf5Syg9zTsCPla9QHk
+	 /zL4LorrS6qZFgeZSZm3iao3Y3coalFkwH3w3EZW9NhaAK18UERB/2y5rFnz1Lwp8Q
+	 H7760kTM6hHwdvyS0cCRbsY/3BzspWuRSw7Ebbnb2jvfAEzkXvBWAJhJxhQCirL7ZV
+	 WELxAgkh7ZvEycZXVOGsceBeWxaBIHSxJsp+b7A6B1lK2Imt73jefxDbLSoOgzRE8I
+	 bw/dVxOk9jO6A==
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by jobs1.bur.intensedebate.com (Postfix) with ESMTP id 669F3B0051C
+	for <abisaymedinarosario@gmail.com>; Tue, 21 Oct 2025 11:28:03 +0000 (UTC)
+From: IntenseDebate Notifications <notifications@intensedebatemail.com>
+Reply-To: IntenseDebate Notifications <notifications+Hg1a432ba39dZgfH-fd9E254dbd4J8L9@intensedebatemail.com>
+To: "Xlone Scan" <abisaymedinarosario@gmail.com>
+Subject: Inayuki69 replied to your comment on Yajin Tensei: Sobreviviente Karateca en otro mundo - - Capítulo 64.00 - XLone Scan - ZonaTMO
+Content-type: text/html; charset=utf-8;
+Message-Id: <20251021112803.669F3B0051C@jobs1.bur.intensedebate.com>
+Date: Tue, 21 Oct 2025 11:28:03 +0000 (UTC)
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>IntenseDebate Notification</title>
+</head>
+
+<body>        <a href="https://www.intensedebate.com/users/39018237">Inayuki69</a> replied to your comment on <a href="https://zonatmo.com/viewer/f940dcad356caf7a6731c6c7147da543/cascade">Yajin Tensei: Sobreviviente Karateca en otro mundo - - Cap&iacute;tulo 64.00 - XLone Scan - ZonaTMO</a> / <a href="https://www.zonatmo.com">zonatmo</a>:
+		<br />
+		<br />
+        Muchas gracias por el cap&iacute;tulo
+        <br />
+        <a href="https://zonatmo.com/viewer/f940dcad356caf7a6731c6c7147da543/cascade#IDComment1126933405">Go to comment</a>
+        <br /><br />
+        In reply to your comment:<br /><br />
+        Ya regres&eacute; y r&aacute;pidamente nos pusimos al d&iacute;a. Espero les haya gustado la traducci&oacute;n. Pueden unirse al discord que es donde actualizo y se hablan de otras cosas   <br />
+  <a href="https:\/\/discord.gg\/GU53CsXabn" target="_blank">https://discord.gg/GU53CsXabn</a><br /><br />
+
+        - - - <br />
+				Reply to this email to post a response to this comment.<br />
+        Please leave the original message intact.  Just type your reply, hit send and you're all set.<br />
+		- - - <br /><br />	This email was sent by <a href="https://www.intensedebate.com/">IntenseDebate</a>, the world's premier commenting system. <a href="https://www.intensedebate.com/editprofile">Unsubscribe</a><br />
+</body>
+</html>
+
