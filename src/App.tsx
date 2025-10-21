@@ -54,6 +54,7 @@ const AppContainer = styled.div`
 
 const MainContent = styled.main`
   position: relative;
+  width: 100vw;
 `;
 
 const navigationSections = [

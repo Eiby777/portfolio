@@ -39,7 +39,6 @@ export const HeroContainer = styled.section`
 
 export const HeroContent = styled.div`
   width: 100%;
-  max-width: 600px;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -53,7 +52,6 @@ export const HeroContent = styled.div`
     text-align: center;
     order: 2;
     padding-top: 2rem;
-    max-width: none;
   }
 `;
 
@@ -95,7 +93,6 @@ export const Description = styled(motion.p)`
   font-size: clamp(1rem, 2vw, 1.25rem);
   color: #b0b0b0;
   margin-bottom: 3rem;
-  max-width: 600px;
   line-height: 1.6;
 
   @media (max-width: 768px) {
@@ -215,13 +212,11 @@ export const AnimationContainer = styled(motion.div)`
   justify-content: center;
   gap: 2rem;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 
   @media (max-width: 768px) {
     gap: 1.5rem;
-    max-width: 90vw;
     padding: 0 1rem;
   }
 `;
@@ -248,7 +243,6 @@ export const FinalContent = styled.div`
   gap: 4rem;
   z-index: 3;
   position: relative;
-  max-width: 1400px;
   width: 100%;
   padding: 0 2rem;
 
