@@ -73,11 +73,17 @@ export const skills: Skill[] = [
   { name: 'SQL', level: 85, category: 'Lenguajes' },
   { name: 'C#', level: 75, category: 'Lenguajes' },
   { name: 'React', level: 80, category: 'Frontend' },
+  { name: 'HTML', level: 85, category: 'Frontend' },
+  { name: 'CSS', level: 85, category: 'Frontend' },
+  { name: 'Windows Forms', level: 70, category: 'Frontend' },
   { name: 'Machine Learning', level: 85, category: 'Data Science' },
   { name: 'Data Analysis', level: 88, category: 'Data Science' },
   { name: 'Data Visualization', level: 82, category: 'Data Science' },
   { name: 'Predictive Modeling', level: 80, category: 'Data Science' },
-  { name: 'Database Development', level: 78, category: 'Backend' }
+  { name: 'Database Development', level: 78, category: 'Backend' },
+  { name: 'FastAPI', level: 85, category: 'Backend' },
+  { name: 'Pydantic', level: 80, category: 'Backend' },
+  { name: 'Server Administration', level: 75, category: 'Backend' }
 ];
 
 export const projects: Project[] = [

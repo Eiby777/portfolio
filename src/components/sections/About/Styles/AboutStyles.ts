@@ -5,7 +5,7 @@ import Card from '../../../ui/Card';
 export const AboutContainer = styled.section`
   min-height: 100vh;
   padding: 5rem 0;
-  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  background: #1a1a2e;
   position: relative;
   overflow: hidden;
 
