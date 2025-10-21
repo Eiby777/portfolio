@@ -1,0 +1,398 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gmail Email Thread - Improved</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #f1f3f4;
+      margin: 0;
+      padding: 0;
+      color: #202124;
+    }
+    .gmail-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #ffffff;
+      border-right: 1px solid #dadce0;
+      padding: 24px 16px;
+      overflow-y: auto;
+    }
+    .sidebar .logo {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: #5f6368;
+      margin-bottom: 32px;
+    }
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar nav li {
+      margin-bottom: 8px;
+    }
+    .sidebar nav a {
+      display: block;
+      padding: 8px 0;
+      color: #5f6368;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      color: #1a73e8;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .top-bar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #dadce0;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .top-bar .search-bar {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 24px;
+    }
+    .top-bar .search-bar input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #dadce0;
+      border-radius: 24px;
+      font-size: 14px;
+      background-color: #f1f3f4;
+    }
+    .top-bar .icons {
+      display: flex;
+      gap: 16px;
+    }
+    .top-bar .icon {
+      width: 24px;
+      height: 24px;
+      background: #5f6368;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+    }
+    .email-view {
+      flex: 1;
+      overflow-y: auto;
+      background-color: #ffffff;
+    }
+    .thread-container {
+      max-width: 800px;
+      margin: 0 auto;
+      border-left: 1px solid #dadce0;
+      border-right: 1px solid #dadce0;
+    }
+    .thread-header {
+      padding: 24px;
+      border-bottom: 1px solid #e8f0fe;
+      background-color: #ffffff;
+    }
+    .thread-header .subject {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #202124;
+      margin: 0 0 8px;
+    }
+    .thread-header .participants {
+      font-size: 14px;
+      color: #5f6368;
+      margin: 0;
+    }
+    .thread-header .date {
+      font-size: 12px;
+      color: #9aa0a6;
+      margin: 4px 0 0;
+    }
+    .email {
+      border-bottom: 1px solid #f1f3f4;
+      position: relative;
+    }
+    .email:last-child {
+      border-bottom: none;
+    }
+    .email-avatar {
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      width: 40px;
+      height: 40px;
+      background-color: #1a73e8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 500;
+      font-size: 16px;
+    }
+    .email-content {
+      margin-left: 72px;
+      padding: 24px 24px 24px 0;
+    }
+    .email-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .email-meta .from {
+      font-weight: 500;
+      color: #202124;
+    }
+    .email-meta .to-cc {
+      color: #5f6368;
+    }
+    .email-meta .date {
+      margin-left: auto;
+      color: #9aa0a6;
+      font-size: 12px;
+    }
+    .email-body {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #202124;
+      margin-bottom: 16px;
+    }
+    .email-body p {
+      margin: 0 0 12px;
+    }
+    .quoted {
+      border-left: 3px solid #e8eaed;
+      background-color: #f8f9fa;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .quoted .header {
+      font-weight: 500;
+      color: #5f6368;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+    .reply-section {
+      background-color: #f1f3f4;
+      padding: 24px;
+      border-top: 1px solid #dadce0;
+    }
+    .reply-button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .reply-button:hover {
+      background-color: #1557b0;
+    }
+    @media (max-width: 768px) {
+      .gmail-container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 16px;
+      }
+      .thread-container {
+        border: none;
+      }
+      .email-avatar {
+        position: static;
+        margin: 0 16px 0 0;
+      }
+      .email-content {
+        margin-left: 0;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="gmail-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Gmail</div>
+      <nav>
+        <ul>
+          <li><a href="#" class="active">Inbox</a></li>
+          <li><a href="#">Starred</a></li>
+          <li><a href="#">Important</a></li>
+          <li><a href="#">Sent</a></li>
+          <li><a href="#">Drafts</a></li>
+          <li><a href="#">All Mail</a></li>
+          <li><a href="#">Trash</a></li>
+          <li><a href="#">Spam</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="icon">☰</div>
+        <div class="search-bar">
+          <input type="search" placeholder="Search Gmail" aria-label="Search">
+        </div>
+        <div class="icons">
+          <div class="icon">↑</div>
+          <div class="icon">✉</div>
+          <div class="icon">⚙</div>
+          <div class="icon">👤</div>
+        </div>
+      </header>
+
+      <!-- Email View -->
+      <section class="email-view">
+        <div class="thread-container">
+          <!-- Thread Header -->
+          <div class="thread-header">
+            <h1 class="subject">Project Update Discussion</h1>
+            <p class="participants">alice.smith@example.com to Bob, Carol</p>
+            <p class="date">10:00 AM (1 hour ago)</p>
+          </div>
+
+          <!-- Email 1 -->
+          <div class="email">
+            <div class="email-avatar">AS</div>
+            <div class="email-content">
+              <div class="email-meta">
+                <span class="from">Alice Smith</span>
+                <span class="to-cc">to Bob Jones</span>
+                <span class="date">9:00 AM</span>
+              </div>
+              <div class="email-body">
+                <p>Hi Bob,</p>
+                <p>I hope you're doing well. I wanted to schedule a meeting to discuss the latest project updates. We need to review the timeline and resource allocation. Are you available this week?</p>
+                <p>Best regards,<br>Alice</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email 2 -->
+          <div class="email">
+            <div class="email-avatar" style="background-color: #34a853;">BJ</div>
+            <div class="email-content">
+              <div class="email-meta">
+                <span class="from">Bob Jones</span>
+                <span class="to-cc">to Alice Smith</span>
+                <span class="date">10:30 AM</span>
+              </div>
+              <div class="email-body">
+                <p>Hi Alice,</p>
+                <p>Thanks for reaching out. I'm available on Thursday afternoon. Does 2 PM work for you? Let me know, and I'll send a calendar invite.</p>
+                <p>Cheers,<br>Bob</p>
+                <div class="quoted">
+                  <div class="header">On Mon, Oct 21, 2025 at 9:00 AM Alice Smith &lt;alice.smith@example.com&gt; wrote:</div>
+                  <p>Hi Bob,</p>
+                  <p>I hope you're doing well. I wanted to schedule a meeting to discuss the latest project updates...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email 3 -->
+          <div class="email">
+            <div class="email-avatar">AS</div>
+            <div class="email-content">
+              <div class="email-meta">
+                <span class="from">Alice Smith</span>
+                <span class="to-cc">to Bob Jones</span>
+                <span class="date">11:00 AM</span>
+              </div>
+              <div class="email-body">
+                <p>Hi Bob,</p>
+                <p>Thursday at 2 PM works perfectly. Please send the calendar invite, and I'll prepare the project update slides.</p>
+                <p>Looking forward to it,<br>Alice</p>
+                <div class="quoted">
+                  <div class="header">On Mon, Oct 21, 2025 at 10:30 AM Bob Jones &lt;bob.jones@example.com&gt; wrote:</div>
+                  <p>Hi Alice,</p>
+                  <p>Thanks for reaching out. I'm available on Thursday afternoon...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reply Section -->
+          <div class="reply-section">
+            <button class="reply-button">Reply</button>
+            <button class="reply-button" style="background-color: #5f6368;">Reply all</button>
+            <button class="reply-button" style="background-color: #5f6368;">Forward</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

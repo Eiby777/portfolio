@@ -76,7 +76,7 @@ export const ProblemTitle = styled.h3`
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #0066ff;
+  color: #ea4335;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -99,7 +99,7 @@ export const SolutionTitle = styled.h3`
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #3399ff;
+  color: #1a73e8;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -118,13 +118,13 @@ export const TechStack = styled.div`
 `;
 
 export const TechBadge = styled.span`
-  background: rgba(0, 102, 255, 0.2);
-  color: #3399ff;
+  background: rgba(26, 115, 232, 0.2);
+  color: #1a73e8;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   font-size: 0.9rem;
   font-weight: 500;
-  border: 1px solid rgba(0, 102, 255, 0.3);
+  border: 1px solid rgba(26, 115, 232, 0.3);
 `;
 
 export const DemoContainer = styled(motion.div)`
@@ -143,7 +143,7 @@ export const DemoHeader = styled.div`
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  color: #3399ff;
+  color: #1a73e8;
   font-weight: 600;
 `;
 
@@ -203,7 +203,7 @@ export const ResultTitle = styled.h4`
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #3399ff;
+  color: #1a73e8;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -233,8 +233,8 @@ export const TaskItem = styled.div`
 `;
 
 export const Assignee = styled.span`
-  background: rgba(0, 102, 255, 0.3);
-  color: #3399ff;
+  background: rgba(26, 115, 232, 0.3);
+  color: #1a73e8;
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.8rem;

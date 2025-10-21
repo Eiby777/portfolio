@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
 import Button from '../../ui/Button';
 import { ProjectContainer, Container, SectionTitle, SectionSubtitle, ContentGrid, ProjectInfo, ProblemStatement, ProblemTitle, ProblemText, SolutionStatement, SolutionTitle, SolutionText, TechStack, TechBadge, DemoContainer, CtaContainer } from './Styles/ProjectTemplateStyles';
