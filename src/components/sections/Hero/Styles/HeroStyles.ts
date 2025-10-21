@@ -12,19 +12,17 @@ const reveal = keyframes`
 
 export const HeroContainer = styled.section`
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
   overflow: hidden;
-  padding: 0 2rem;
+  padding: 2rem;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    padding: 0 1rem;
+    padding: 1rem;
   }
 
   &::before {
@@ -41,7 +39,7 @@ export const HeroContainer = styled.section`
 
 export const HeroContent = styled.div`
   width: 100%;
-  max-width: none;
+  max-width: 600px;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -55,6 +53,7 @@ export const HeroContent = styled.div`
     text-align: center;
     order: 2;
     padding-top: 2rem;
+    max-width: none;
   }
 `;
 
@@ -169,23 +168,23 @@ export const ProfileImageContainer = styled(motion.div)`
   align-items: center;
   position: relative;
   z-index: 2;
+  margin-top: 2rem;
 
   @media (max-width: 768px) {
-    order: 1;
-    margin-bottom: 2rem;
+    margin-top: 1rem;
   }
 
   img {
-    width: 300px;
-    height: 400px;
+    width: 400px;
+    height: 300px;
     object-fit: cover;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     @media (max-width: 768px) {
-      width: 200px;
-      height: 300px;
+      width: 300px;
+      height: 200px;
     }
 
     &:hover {
@@ -206,5 +205,56 @@ export const ProfileImageContainer = styled(motion.div)`
     z-index: -1;
     opacity: 0;
     animation: ${reveal} 1s ease-out 0.5s forwards;
+  }
+`;
+
+export const AnimationContainer = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+    max-width: 90vw;
+    padding: 0 1rem;
+  }
+`;
+
+export const BackgroundImage = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/components/sections/Hero/Images/placeholder-hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  z-index: 1;
+`;
+
+export const FinalContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  z-index: 3;
+  position: relative;
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 1rem;
   }
 `;

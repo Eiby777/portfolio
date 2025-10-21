@@ -1,15 +1,20 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaEnvelope, FaArrowDown } from 'react-icons/fa';
 import Button from '../../ui/Button';
 import { personalInfo } from '../../../data/portfolioData';
-import { HeroContainer, HeroContent, Greeting, Name, Title, Description, ButtonContainer, ScrollIndicator, FloatingShapes, Shape, ProfileImageContainer } from './Styles/HeroStyles';
-import { useTypingAnimation } from './Handlers/useTypingAnimation';
+import { HeroContainer, HeroContent, Greeting, Name, Title, Description, ButtonContainer, ScrollIndicator, FloatingShapes, Shape, ProfileImageContainer, AnimationContainer, BackgroundImage, FinalContent } from './Styles/HeroStyles';
+import { useHeroAnimation } from './Handlers/useHeroAnimation';
 import { useScrollToSection } from './Handlers/useScrollToSection';
 import { floatingShapes } from './Models/floatingShapes';
+import VirtualKeyboard from './Components/VirtualKeyboard';
+import SearchInput from './Components/SearchInput';
+import LoadingEllipsis from './Components/LoadingEllipsis';
 
 const Hero: React.FC = () => {
-  const { displayText } = useTypingAnimation(personalInfo.title);
+  const { phase, searchText, activeKey, isComplete, startAnimation } = useHeroAnimation();
   const { scrollToSection } = useScrollToSection();
+
+  console.log('Hero component render - phase:', phase, 'searchText:', searchText, 'activeKey:', activeKey);
 
   return (
     <HeroContainer id="hero">
@@ -34,93 +39,153 @@ const Hero: React.FC = () => {
         ))}
       </FloatingShapes>
 
-      <HeroContent
-        as={motion.div}
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        <Greeting
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          Freelancer Especializado
-        </Greeting>
+      <AnimatePresence mode="wait">
+        {phase === 'initial' && (
+            <AnimationContainer
+              key="initial"
+              as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <SearchInput value={searchText} onSubmit={startAnimation} />
+              <VirtualKeyboard activeKey={activeKey} />
+            </AnimationContainer>
+          )}
 
-        <Name
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          {personalInfo.name}
-        </Name>
+          {phase === 'typing' && (
+            <AnimationContainer
+              key="typing"
+              as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <SearchInput value={searchText} />
+              <VirtualKeyboard activeKey={activeKey} />
+            </AnimationContainer>
+          )}
 
-        <Title
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          {displayText}
-          <span className="typing-cursor"></span>
-        </Title>
-
-        <Description
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.0 }}
-        >
-          Freelancer especializado en soluciones de datos y desarrollo de software para empresas dominicanas. Transformo datos en decisiones estratégicas con machine learning y análisis avanzado.
-        </Description>
-
-        <ButtonContainer
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-        >
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => scrollToSection('projects')}
+        {phase === 'loading' && (
+          <AnimationContainer
+            key="loading"
+            as={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            Ver Servicios
-          </Button>
-          <Button
-            variant="secondary"
-            size="lg"
-            onClick={() => scrollToSection('contact')}
+            <LoadingEllipsis />
+          </AnimationContainer>
+        )}
+
+        {phase === 'final' && (
+          <FinalContent
+            key="final"
+            as={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
           >
-            <FaEnvelope />
-            Solicitar Consulta
-          </Button>
-        </ButtonContainer>
-      </HeroContent>
+            <BackgroundImage
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              transition={{ duration: 1.5 }}
+            />
 
-      <ProfileImageContainer
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        <img
-          src="/src/components/sections/Hero/Images/placeholder-profile.jpg"
-          alt="Professional profile"
-        />
-      </ProfileImageContainer>
+            <HeroContent
+              as={motion.div}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              <Greeting
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+              >
+                Freelancer Especializado
+              </Greeting>
 
-      <ScrollIndicator
-        onClick={() => scrollToSection('about')}
-        animate={{
-          y: [0, 10, 0],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut" as const,
-        }}
-      >
-        <FaArrowDown />
-        <span>Explorar más</span>
-      </ScrollIndicator>
+              <Name
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+              >
+                {personalInfo.name}
+              </Name>
+
+              <Title
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.1 }}
+              >
+                {personalInfo.title}
+              </Title>
+
+              <Description
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.3 }}
+              >
+                Freelancer especializado en soluciones de datos y desarrollo de software para empresas dominicanas. Transformo datos en decisiones estratégicas con machine learning y análisis avanzado.
+              </Description>
+
+              <ButtonContainer
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.5 }}
+              >
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => scrollToSection('projects')}
+                >
+                  Ver Servicios
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => scrollToSection('contact')}
+                >
+                  <FaEnvelope />
+                  Solicitar Consulta
+                </Button>
+              </ButtonContainer>
+            </HeroContent>
+
+            <ProfileImageContainer
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <img
+                src="/src/components/sections/Hero/Images/placeholder-profile.jpg"
+                alt="Professional profile"
+              />
+            </ProfileImageContainer>
+          </FinalContent>
+        )}
+      </AnimatePresence>
+
+      {isComplete && (
+        <ScrollIndicator
+          onClick={() => scrollToSection('about')}
+          animate={{
+            y: [0, 10, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut" as const,
+          }}
+        >
+          <FaArrowDown />
+          <span>Explorar más</span>
+        </ScrollIndicator>
+      )}
     </HeroContainer>
   );
 };
