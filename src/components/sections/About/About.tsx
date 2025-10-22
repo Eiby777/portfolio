@@ -45,7 +45,6 @@ const About: React.FC = () => {
             category === 'Data Science' ? '#00ff88' :
             '#ff6600'
    }));
-   console.info(categoryData);
 
    /**
     * Transforms skills data into radar chart format
