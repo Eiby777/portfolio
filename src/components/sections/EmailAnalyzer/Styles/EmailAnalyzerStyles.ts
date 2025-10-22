@@ -29,6 +29,10 @@ export const Container = styled.div`
   position: relative;
   z-index: 2;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const SectionTitle = styled(motion.h2)`
