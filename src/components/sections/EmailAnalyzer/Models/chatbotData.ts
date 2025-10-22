@@ -118,4 +118,11 @@ export const chatbotData = {
   responses: chatbotResponses
 };
 
+console.info('chatbotData loaded', {
+  questionsCount: chatbotData.questions.length,
+  responsesCount: chatbotData.responses.length,
+  questions: chatbotData.questions.map(q => ({ id: q.id, text: q.question })),
+  responses: chatbotData.responses.map(r => ({ id: r.id, questionId: r.questionId, text: r.answer.substring(0, 50) + '...' }))
+});
+
 export default chatbotData;

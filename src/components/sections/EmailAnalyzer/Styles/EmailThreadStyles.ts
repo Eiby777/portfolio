@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, type Easing } from 'framer-motion';
 
 export const ThreadContainer = styled(motion.div)`
   display: flex;
@@ -135,7 +135,7 @@ export const threadContainerVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: 'easeOut',
+      ease: "easeOut" as Easing,
       staggerChildren: 0.1,
     },
   },

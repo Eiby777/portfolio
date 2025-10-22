@@ -45,7 +45,7 @@ export const SectionTitle = styled(motion.h2)`
 
 export const SectionSubtitle = styled(motion.p)`
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
   text-align: center;
   margin-bottom: 4rem;
   max-width: 800px;
@@ -89,7 +89,7 @@ export const ProblemTitle = styled.h3`
 
 export const ProblemText = styled.p`
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
 `;
 
 export const SolutionStatement = styled.div`
@@ -112,7 +112,7 @@ export const SolutionTitle = styled.h3`
 
 export const SolutionText = styled.p`
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
 `;
 
 export const TechStack = styled.div`
@@ -215,7 +215,7 @@ export const ResultTitle = styled.h4`
 `;
 
 export const ResultContent = styled.div`
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   line-height: 1.5;
 `;
 

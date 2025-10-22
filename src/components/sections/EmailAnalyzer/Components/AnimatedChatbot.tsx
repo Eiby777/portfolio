@@ -55,10 +55,14 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   } = useTypingAnimation({
     autoStart,
     autoStartDelay,
-    onPairComplete: () => {
+    onPairComplete: (pairIndex) => {
+      console.info('AnimatedChatbot onPairComplete', { pairIndex });
       // Simplified - no color transitions
     },
-    onFlowComplete,
+    onFlowComplete: () => {
+      console.info('AnimatedChatbot onFlowComplete');
+      if (onFlowComplete) onFlowComplete();
+    },
     enabled: isVisible,
   });
 
@@ -162,18 +166,20 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
         <AnimatePresence>
           {messages.map((message, index) => {
             const isLastMessage = index === messages.length - 1;
-            const isBotResponse = !isUserMessage(message);
-            const showTypingIndicator = isLastMessage && isBotResponse && isFlowActive;
+            const isUserMessage = 'question' in message; // true para preguntas (derecha), false para respuestas (izquierda)
+            const showTypingIndicator = isLastMessage && !isUserMessage && isFlowActive;
 
             return (
               <React.Fragment key={message.id}>
                 <ChatMessage
                   text={getMessageText(message)}
-                  isUser={isUserMessage(message)}
+                  isUser={isUserMessage}
                   timestamp={new Date()}
                   shouldType={true}
                   typingSpeed={'typingSpeed' in message ? message.typingSpeed : 30}
-                  onTypingComplete={handleMessageTypingComplete}
+                  onTypingComplete={() => {
+                    handleMessageTypingComplete();
+                  }}
                   showIcons={true}
                 />
                 {showTypingIndicator && (

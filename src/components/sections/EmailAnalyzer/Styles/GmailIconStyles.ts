@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, type Easing } from 'framer-motion';
 
 export const TransformContainer = styled.div<{ $isActive: boolean }>`
   position: relative;
@@ -54,7 +54,7 @@ export const gmailIconVariants = {
     borderRadius: '12px',
     transition: {
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: "easeInOut" as Easing,
     },
   },
   shrinking: {
@@ -62,7 +62,7 @@ export const gmailIconVariants = {
     borderRadius: '12px',
     transition: {
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: "easeInOut" as Easing,
     },
   },
   gmailIcon: {
@@ -70,7 +70,7 @@ export const gmailIconVariants = {
     borderRadius: '50%',
     transition: {
       duration: 0.8,
-      ease: 'easeInOut',
+      ease: "easeInOut" as Easing,
     },
   },
   disappearing: {
@@ -79,7 +79,7 @@ export const gmailIconVariants = {
     borderRadius: '50%',
     transition: {
       duration: 1,
-      ease: 'easeInOut',
+      ease: "easeInOut" as Easing,
     },
   },
 };
@@ -94,7 +94,7 @@ export const gmailLogoVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
+      ease: "easeOut" as Easing,
     },
   },
   disappearing: {
@@ -102,7 +102,7 @@ export const gmailLogoVariants = {
     scale: 0.5,
     transition: {
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: "easeInOut" as Easing,
     },
   },
 };
@@ -117,7 +117,7 @@ export const emailContentVariants = {
     scale: 0.9,
     transition: {
       duration: 0.3,
-      ease: 'easeInOut',
+      ease: "easeInOut" as Easing,
     },
   },
   hidden: {

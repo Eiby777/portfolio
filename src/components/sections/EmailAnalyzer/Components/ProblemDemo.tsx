@@ -194,7 +194,7 @@ const ProblemDemo: React.FC = () => {
                 </div>
                 <div style={{
                   fontSize: '0.6rem',
-                  color: '#666',
+                  color: '#ffffff',
                   textAlign: 'center',
                   lineHeight: '1.2'
                 }}>
@@ -213,7 +213,7 @@ const ProblemDemo: React.FC = () => {
         style={{
           marginTop: '2rem',
           fontSize: '1.1rem',
-          color: '#666',
+          color: '#ffffff',
           textAlign: 'center',
           maxWidth: '600px'
         }}

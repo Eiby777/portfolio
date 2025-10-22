@@ -110,7 +110,7 @@ const IntroAnimation: React.FC<{ onPlayClick: () => void }> = ({ onPlayClick }) 
         style={{
           fontSize: '1.2rem',
           marginBottom: '2rem',
-          color: '#666',
+          color: '#ffffff',
           maxWidth: '600px',
           position: 'relative',
           zIndex: 2

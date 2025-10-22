@@ -161,7 +161,7 @@ const SolutionReveal: React.FC = () => {
         style={{
           marginTop: '2rem',
           fontSize: '1.1rem',
-          color: '#666',
+          color: '#ffffff',
           textAlign: 'center',
           maxWidth: '600px'
         }}

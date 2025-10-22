@@ -2,47 +2,24 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { chatbotData } from '../Models/chatbotData';
 import type { ChatMessage as ChatMessageType, ChatResponse } from '../Models/chatbotData';
 
-/**
- * Interface for useTypingAnimation hook options
- */
 interface UseTypingAnimationOptions {
-  /** Whether the automated flow should start automatically */
   autoStart?: boolean;
-  /** Delay before starting the automated flow (in milliseconds) */
   autoStartDelay?: number;
-  /** Callback when each Q&A pair completes */
   onPairComplete?: (pairIndex: number) => void;
-  /** Callback when the entire flow completes */
   onFlowComplete?: () => void;
-  /** Whether the hook is enabled */
   enabled?: boolean;
 }
 
-/**
- * Interface for useTypingAnimation hook return value
- */
 interface UseTypingAnimationReturn {
-  /** Array of current messages in the conversation */
   messages: Array<ChatMessageType | ChatResponse>;
-  /** Whether the automated flow is currently active */
   isFlowActive: boolean;
-  /** Current question index being processed */
   currentQuestionIndex: number;
-  /** Whether the flow has started */
   hasStarted: boolean;
-  /** Function to manually start the automated flow */
   startFlow: () => void;
-  /** Function to reset the flow state */
   resetFlow: () => void;
-  /** Reference to the messages container for scrolling */
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
-/**
- * Custom hook for managing automated question-answer flow with typing animations
- * @param options - Configuration options for the hook
- * @returns Hook state and control functions
- */
 export const useTypingAnimation = ({
   autoStart = false,
   autoStartDelay = 0,
@@ -51,138 +28,166 @@ export const useTypingAnimation = ({
   enabled = true,
 }: UseTypingAnimationOptions = {}): UseTypingAnimationReturn => {
   const [messages, setMessages] = useState<Array<ChatMessageType | ChatResponse>>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isFlowActive, setIsFlowActive] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
+  const instanceId = useRef<string>(`instance-${Date.now()}-${Math.random()}`);
 
-  /**
-   * Get the text content from a message
-   */
-  const getMessageText = useCallback((message: ChatMessageType | ChatResponse): string => {
-    if ('question' in message) {
-      return message.question;
-    }
-    if ('answer' in message) {
-      return message.answer;
-    }
-    return '';
-  }, []);
+  console.info('useTypingAnimation initialized', { 
+    instanceId: instanceId.current,
+    autoStart, 
+    autoStartDelay, 
+    enabled 
+  });
 
-  /**
-   * Calculate typing duration for a message
-   */
-  const getTypingDuration = useCallback((message: ChatMessageType | ChatResponse): number => {
-    const text = getMessageText(message);
-    const typingSpeed = 'typingSpeed' in message ? message.typingSpeed : 30;
-    return text.length * typingSpeed;
-  }, [getMessageText]);
+  // Calcular tiempos absolutos para cada mensaje
+  const calculateMessageTimings = useCallback(() => {
+    const timings: Array<{ message: ChatMessageType | ChatResponse; timestamp: number }> = [];
+    let currentTime = autoStartDelay;
 
-  /**
-   * Add a question to the messages array and start its typing animation
-   */
-  const addQuestion = useCallback((index: number) => {
-    if (index >= chatbotData.questions.length) {
-      // Flow complete
-      setIsFlowActive(false);
-      if (onFlowComplete) {
-        onFlowComplete();
+    // Agregar preguntas y respuestas intercaladas
+    chatbotData.questions.forEach((question, index) => {
+      // Tiempo para la pregunta
+      const questionTime = currentTime + 500 + (index * 4000); // 500ms base + 4s por cada par
+      timings.push({
+        message: question,
+        timestamp: questionTime
+      });
+
+      // Encontrar la respuesta correspondiente
+      const response = chatbotData.responses.find(r => r.questionId === question.id);
+      if (response) {
+        // Tiempo para la respuesta (2s después de la pregunta)
+        timings.push({
+          message: response,
+          timestamp: questionTime + 2000
+        });
       }
+    });
+
+    // Ordenar por timestamp para asegurar el orden correcto
+    timings.sort((a, b) => a.timestamp - b.timestamp);
+
+    console.info('Message timings calculated', {
+      instanceId: instanceId.current,
+      timings: timings.map(t => ({
+        id: t.message.id,
+        type: 'question' in t.message ? 'question' : 'response',
+        timestamp: t.timestamp
+      }))
+    });
+
+    return timings;
+  }, [autoStartDelay]);
+
+  const startFlow = useCallback(() => {
+    console.info('startFlow called', { 
+      instanceId: instanceId.current,
+      enabled, 
+      hasStarted 
+    });
+    
+    if (!enabled || hasStarted) {
+      console.info('Flow start blocked', { enabled, hasStarted });
       return;
     }
 
-    const question = chatbotData.questions[index];
-    setMessages(prev => [...prev, question]);
-
-    // Schedule the response after question typing completes + delay
-    const questionTypingDuration = getTypingDuration(question);
-    const responseDelay = question.animationDelay;
-
-    setTimeout(() => {
-      addResponse(index);
-    }, questionTypingDuration + responseDelay);
-  }, [getTypingDuration, onFlowComplete]);
-
-  /**
-   * Add a response to the messages array and schedule next question
-   */
-  const addResponse = useCallback((questionIndex: number) => {
-    const response = chatbotData.responses.find(r => r.questionId === chatbotData.questions[questionIndex].id);
-    if (!response) return;
-
-    setMessages(prev => [...prev, response]);
-
-    // Notify that this Q&A pair is complete
-    if (onPairComplete) {
-      onPairComplete(questionIndex);
-    }
-
-    // Schedule next question after response typing completes + delay
-    const responseTypingDuration = getTypingDuration(response);
-    const nextQuestionDelay = response.animationDelay;
-
-    setTimeout(() => {
-      setCurrentQuestionIndex(prev => prev + 1);
-      addQuestion(questionIndex + 1);
-    }, responseTypingDuration + nextQuestionDelay);
-  }, [getTypingDuration, onPairComplete, addQuestion]);
-
-  /**
-   * Start the automated Q&A flow
-   */
-  const startFlow = useCallback(() => {
-    if (isFlowActive || !enabled) return;
-
-    setIsFlowActive(true);
+    console.info('Starting flow', { instanceId: instanceId.current });
     setHasStarted(true);
-    setCurrentQuestionIndex(0);
+    setIsFlowActive(true);
     setMessages([]);
 
-    // Start with the first question
-    addQuestion(0);
-  }, [isFlowActive, enabled, addQuestion]);
+    const timings = calculateMessageTimings();
+    const startTime = Date.now();
 
-  /**
-   * Reset the flow state
-   */
+    // Programar cada mensaje con su tiempo absoluto
+    timings.forEach(({ message, timestamp }) => {
+      const delay = timestamp;
+      
+      console.info('Scheduling message', {
+        instanceId: instanceId.current,
+        messageId: message.id,
+        type: 'question' in message ? 'question' : 'response',
+        delay
+      });
+
+      const timer = setTimeout(() => {
+        console.info('Showing message', {
+          instanceId: instanceId.current,
+          messageId: message.id,
+          type: 'question' in message ? 'question' : 'response'
+        });
+
+        setMessages(prev => {
+          const newMessages = [...prev, message];
+          console.info('Messages updated', {
+            instanceId: instanceId.current,
+            count: newMessages.length,
+            lastMessageId: message.id
+          });
+          return newMessages;
+        });
+
+        // Verificar si es el último mensaje
+        const isLastMessage = timings[timings.length - 1].message.id === message.id;
+        if (isLastMessage) {
+          console.info('All messages shown, completing flow', { instanceId: instanceId.current });
+          setIsFlowActive(false);
+          if (onFlowComplete) {
+            onFlowComplete();
+          }
+        }
+      }, delay);
+
+      timersRef.current.push(timer);
+    });
+  }, [enabled, hasStarted, calculateMessageTimings, onFlowComplete]);
+
   const resetFlow = useCallback(() => {
+    console.info('resetFlow called', { instanceId: instanceId.current });
+    
+    // Limpiar todos los timers
+    timersRef.current.forEach(timer => clearTimeout(timer));
+    timersRef.current = [];
+
     setMessages([]);
     setIsFlowActive(false);
     setHasStarted(false);
-    setCurrentQuestionIndex(0);
+    
+    console.info('Flow reset complete', { instanceId: instanceId.current });
   }, []);
 
-  /**
-   * Auto-start the flow if requested and enabled
-   */
+  // AutoStart
   useEffect(() => {
     if (autoStart && enabled && !hasStarted) {
-      const timer = setTimeout(() => {
-        startFlow();
-      }, autoStartDelay);
-
-      return () => clearTimeout(timer);
+      console.info('Auto starting flow', { instanceId: instanceId.current });
+      startFlow();
     }
-  }, [autoStart, autoStartDelay, enabled, hasStarted, startFlow]);
+  }, [autoStart, enabled, hasStarted, startFlow]);
 
-  /**
-   * Reset when disabled
-   */
+  // Reset cuando se deshabilita
   useEffect(() => {
     if (!enabled) {
+      console.info('Enabled is false, resetting flow', { instanceId: instanceId.current });
       resetFlow();
     }
   }, [enabled, resetFlow]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(timer => clearTimeout(timer));
+    };
+  }, []);
+
   return {
     messages,
     isFlowActive,
-    currentQuestionIndex,
+    currentQuestionIndex: Math.floor(messages.length / 2), // Approximate
     hasStarted,
     startFlow,
     resetFlow,
     messagesEndRef,
   };
 };
-
-export default useTypingAnimation;

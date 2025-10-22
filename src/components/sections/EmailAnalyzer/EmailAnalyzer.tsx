@@ -59,7 +59,7 @@ const EmailAnalyzer: React.FC = () => {
               <p style={{
                 fontSize: '1.2rem',
                 marginBottom: '2rem',
-                color: '#666',
+                color: '#ffffff',
                 maxWidth: '500px'
               }}>
                 Has visto cómo la IA transforma hilos complejos de email en insights accionables.

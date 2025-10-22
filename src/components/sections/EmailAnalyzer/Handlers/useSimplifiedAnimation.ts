@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 export type AnimationPhase = 'introduction' | 'problem-demo' | 'solution-reveal' | 'cta-display';
 
 const PHASE_DURATIONS = {
-  introduction: 4000,
+  introduction: 500,
   'problem-demo': 12000,
-  'solution-reveal': 15000,
+  'solution-reveal': 25000, // Aumentado para dar más tiempo al chatbot
   'cta-display': 3000,
 };
 

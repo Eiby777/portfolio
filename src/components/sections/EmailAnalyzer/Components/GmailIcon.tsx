@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Easing } from 'framer-motion';
 import { useGmailTransform } from '../Handlers/useGmailTransform';
 import type { AnimationState } from '../Handlers/useGmailTransform';
 import {
@@ -188,7 +188,7 @@ const GmailIcon: React.FC<GmailIconProps> = ({
                 }}
                 transition={{
                   duration: 1.5,
-                  ease: "easeInOut"
+                  ease: "easeInOut" as Easing
                 }}
               />
             </GmailIconContainer>
