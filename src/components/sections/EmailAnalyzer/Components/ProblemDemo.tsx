@@ -113,6 +113,9 @@ const ProblemDemo: React.FC = () => {
             console.info('Problem demo email thread scroll completed');
           }}
           scrollSpeed={150}
+          maxHeight="50vh"
+          enableHeightAnimation={true}
+          showTooltips={true}
         />
 
         {/* Pain Point Indicators */}
@@ -216,6 +219,22 @@ const ProblemDemo: React.FC = () => {
         }}
       >
         Observa cómo los hilos de email pueden volverse complejos y difíciles de analizar manualmente...
+      </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 1.5, ease: 'easeOut' }}
+        style={{
+          marginTop: '1rem',
+          fontSize: '1rem',
+          color: '#ea4335',
+          textAlign: 'center',
+          maxWidth: '600px',
+          fontWeight: '600'
+        }}
+      >
+        El volumen de información y la pérdida de tiempo al revisar conversaciones extensas hace que el trabajo manual sea ineficiente y propenso a errores.
       </motion.p>
     </motion.div>
   );
