@@ -4,14 +4,10 @@ import { useGmailTransform } from '../Handlers/useGmailTransform';
 import type { AnimationState } from '../Handlers/useGmailTransform';
 import {
   GmailIconContainer,
-  GmailLogo,
-  GmailMLetter,
-  GmailSection,
   EmailThreadTransform,
   EmailContentPreview,
   gmailIconVariants,
   gmailLogoVariants,
-  gmailSectionVariants,
   emailContentVariants,
   TransformContainer,
 } from '../Styles/GmailIconStyles';
@@ -177,49 +173,24 @@ const GmailIcon: React.FC<GmailIconProps> = ({
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              <GmailLogo $size={size * 0.67}>
-                <GmailMLetter $size={size * 0.67}>
-                  {/* Left section of "M" - Red */}
-                  <GmailSection
-                    as={motion.div}
-                    variants={gmailSectionVariants}
-                    custom={{ $position: 'left' }}
-                    $color="#ea4335"
-                    $position="left"
-                    $size={size * 0.67}
-                  />
-                  
-                  {/* Right section of "M" - Blue */}
-                  <GmailSection
-                    as={motion.div}
-                    variants={gmailSectionVariants}
-                    custom={{ $position: 'right' }}
-                    $color="#1a73e8"
-                    $position="right"
-                    $size={size * 0.67}
-                  />
-                  
-                  {/* Center section of "M" - Yellow */}
-                  <GmailSection
-                    as={motion.div}
-                    variants={gmailSectionVariants}
-                    custom={{ $position: 'center' }}
-                    $color="#fbbc04"
-                    $position="center"
-                    $size={size * 0.67}
-                  />
-                  
-                  {/* Bottom section of "M" - Green */}
-                  <GmailSection
-                    as={motion.div}
-                    variants={gmailSectionVariants}
-                    custom={{ $position: 'bottom' }}
-                    $color="#34a853"
-                    $position="bottom"
-                    $size={size * 0.67}
-                  />
-                </GmailMLetter>
-              </GmailLogo>
+              <motion.img
+                src="/gmai-icon.webp"
+                alt="Gmail Icon"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '50%'
+                }}
+                animate={{
+                  opacity: animationState === 'disappearing' ? [1, 0.8, 0.6, 0.4, 0.2, 0] : 1,
+                  scale: animationState === 'disappearing' ? [1, 0.9, 0.8, 0.6, 0.4, 0.2] : 1,
+                }}
+                transition={{
+                  duration: 1.5,
+                  ease: "easeInOut"
+                }}
+              />
             </GmailIconContainer>
           )}
         </AnimatePresence>

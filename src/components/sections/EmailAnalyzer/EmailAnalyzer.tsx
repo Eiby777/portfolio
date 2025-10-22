@@ -1,156 +1,71 @@
-import { AnimatePresence } from 'framer-motion';
-import { FaEnvelope, FaSearch, FaArrowRight } from 'react-icons/fa';
+import { AnimatePresence, motion } from 'framer-motion';
+import { FaArrowRight } from 'react-icons/fa';
 import Button from '../../ui/Button';
 import { projects } from '../../../data/portfolioData';
-import { ProjectContainer, Container, SectionTitle, SectionSubtitle, ContentGrid, ProjectInfo, ProblemStatement, ProblemTitle, ProblemText, SolutionStatement, SolutionTitle, SolutionText, TechStack, TechBadge, DemoContainer, CtaContainer } from './Styles/EmailAnalyzerStyles';
-// import { useEmailAnalysis } from './Handlers/useEmailAnalysis';
-import AnimatedChatbot from './Components/AnimatedChatbot';
-import EmailThreadViewer from './Components/EmailThreadViewer';
-import GmailIcon from './Components/GmailIcon';
-import InitialScreen from './Components/InitialScreen';
-import { emailThreadsData } from './Models/emailThreadsData';
-import { useEmailAnalyzerAnimation } from './Handlers/useEmailAnalyzerAnimation';
+import { ProjectContainer, Container, CtaContainer } from './Styles/EmailAnalyzerStyles';
+import { useSimplifiedAnimation } from './Handlers/useSimplifiedAnimation';
+import IntroAnimation from './Components/IntroAnimation';
+import ProblemDemo from './Components/ProblemDemo';
+import SolutionReveal from './Components/SolutionReveal';
 
 const EmailAnalyzer: React.FC = () => {
-  // const { isAnalyzing, showResults, analyzedData, handleAnalyze } = useEmailAnalysis();
   const project = projects[0];
-
-  // Animation controller
-  const {
-    phase,
-    onTransitionComplete,
-    onEmailThreadComplete,
-    onTransformComplete,
-    onChatbotAppearComplete,
-    onIconFadeComplete,
-    onChatbotActiveComplete,
-  } = useEmailAnalyzerAnimation();
+  const { phase, startAnimation } = useSimplifiedAnimation();
 
   return (
     <ProjectContainer id="email-analyzer" $bgColor={project.bgColor}>
       <Container>
         <AnimatePresence mode="wait">
-          {phase === 'initial' && (
-            <InitialScreen
-              key="initial-screen"
-              isVisible={phase === 'initial'}
-              onPlayClick={onTransitionComplete}
+          {phase === 'introduction' && (
+            <IntroAnimation
+              key="intro-animation"
+              onPlayClick={startAnimation}
             />
           )}
 
-          {phase !== 'initial' && (
-            <>
-              <SectionTitle
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                {project.title}
-              </SectionTitle>
+          {phase === 'problem-demo' && (
+            <ProblemDemo key="problem-demo" />
+          )}
 
-              <SectionSubtitle
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-              >
-                {project.description}
-              </SectionSubtitle>
+          {phase === 'solution-reveal' && (
+            <SolutionReveal key="solution-reveal" />
+          )}
 
-              <ContentGrid>
-                <ProjectInfo
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  <ProblemStatement>
-                    <ProblemTitle>
-                      <FaSearch />
-                      Problema
-                    </ProblemTitle>
-                    <ProblemText>
-                      {project.problem}
-                    </ProblemText>
-                  </ProblemStatement>
+          {phase === 'cta-display' && (
+            <motion.div
+              key="cta-display"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '60vh',
+                padding: '2rem',
+                textAlign: 'center'
+              }}
+            >
+              <h2 style={{
+                fontSize: '2.5rem',
+                fontWeight: 'bold',
+                marginBottom: '1rem',
+                color: '#1a73e8'
+              }}>
+                ¡Listo para Explorar!
+              </h2>
+              <p style={{
+                fontSize: '1.2rem',
+                marginBottom: '2rem',
+                color: '#666',
+                maxWidth: '500px'
+              }}>
+                Has visto cómo la IA transforma hilos complejos de email en insights accionables.
+              </p>
 
-                  <SolutionStatement>
-                    <SolutionTitle>
-                      <FaEnvelope />
-                      Solución
-                    </SolutionTitle>
-                    <SolutionText>
-                      {project.solution}
-                    </SolutionText>
-                  </SolutionStatement>
-
-                  <div>
-                    <h4 style={{ marginBottom: '1rem', color: '#1a73e8' }}>Tecnologías:</h4>
-                    <TechStack>
-                      {project.techStack.map((tech, index) => (
-                        <TechBadge key={index}>{tech}</TechBadge>
-                      ))}
-                    </TechStack>
-                  </div>
-                </ProjectInfo>
-
-                <DemoContainer
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  style={{ display: 'flex', gap: '2rem' }}
-                >
-                  <div style={{ flex: 1, position: 'relative' }}>
-                    <EmailThreadViewer
-                      thread={emailThreadsData[0]}
-                      shouldAutoScroll={phase === 'email-thread'}
-                      onScrollComplete={() => {
-                        console.info('Email thread scroll completed');
-                        onEmailThreadComplete();
-                      }}
-                      scrollSpeed={150}
-                    />
-
-                    {/* Gmail Icon Transformation */}
-                    {(phase === 'transform' || phase === 'chatbot-appear' || phase === 'icon-fade') && (
-                      <GmailIcon
-                        autoStart={phase === 'transform'}
-                        autoStartDelay={0}
-                        onTransformComplete={() => {
-                          console.info('Gmail icon transformation completed');
-                          onTransformComplete();
-                        }}
-                        onDisappearComplete={() => {
-                          console.info('Gmail icon disappearing completed');
-                          onIconFadeComplete();
-                        }}
-                        size={48}
-                        emailContent="Email thread content transforming..."
-                        isVisible={phase !== 'icon-fade'}
-                      />
-                    )}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <AnimatedChatbot
-                      autoStart={phase === 'chatbot-active'}
-                      autoStartDelay={0}
-                      onColorTransitionComplete={() => {
-                        console.info('Color transition completed');
-                        onChatbotAppearComplete();
-                      }}
-                      onFlowComplete={() => {
-                        console.info('Automated flow completed');
-                        onChatbotActiveComplete();
-                      }}
-                      isVisible={phase === 'chatbot-appear' || phase === 'icon-fade' || phase === 'chatbot-active'}
-                    />
-                  </div>
-                </DemoContainer>
-              </ContentGrid>
-
-              <CtaContainer
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
+              <CtaContainer>
                 <Button
                   variant="primary"
                   size="lg"
@@ -160,7 +75,7 @@ const EmailAnalyzer: React.FC = () => {
                   <FaArrowRight />
                 </Button>
               </CtaContainer>
-            </>
+            </motion.div>
           )}
         </AnimatePresence>
       </Container>

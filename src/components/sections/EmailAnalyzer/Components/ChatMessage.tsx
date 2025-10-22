@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { FaUser, FaRobot } from 'react-icons/fa';
+import { FaUser, FaRobot, FaExternalLinkAlt } from 'react-icons/fa';
 import {
   MessageBubble,
   MessageTime,
@@ -113,6 +113,39 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     }
   }, [text, shouldType]);
 
+  /**
+   * Render text with clickable links
+   */
+  const renderTextWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: `hsl(220, 90%, ${60 + saturation * 30}%)`,
+              textDecoration: 'underline',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              wordBreak: 'break-all'
+            }}
+          >
+            {part}
+            <FaExternalLinkAlt style={{ fontSize: '0.8em' }} />
+          </a>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isTyping && !hasCompletedTyping ? (
@@ -163,7 +196,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             </div>
           )}
           <div style={{ flex: 1 }}>
-            {displayedText}
+            {renderTextWithLinks(displayedText)}
           </div>
           <MessageTime>
             {timestamp.toLocaleTimeString([], {

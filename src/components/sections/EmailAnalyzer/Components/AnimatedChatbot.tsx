@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { FaRobot } from 'react-icons/fa';
-import { useColorTransition } from '../Handlers/useColorTransition';
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { FaRobot, FaArrowRight } from 'react-icons/fa';
 import { useTypingAnimation } from '../Handlers/useTypingAnimation';
 import type { ChatMessage as ChatMessageType, ChatResponse } from '../Models/chatbotData';
 import ChatMessage from './ChatMessage';
@@ -14,7 +13,6 @@ import {
   HeaderTitle,
   HeaderSubtitle,
   MessagesContainer,
-  colorTransitionVariants,
 } from '../Styles/ChatbotStyles';
 
 /**
@@ -25,8 +23,6 @@ interface AnimatedChatbotProps {
   autoStart?: boolean;
   /** Delay before starting the automated flow (in milliseconds) */
   autoStartDelay?: number;
-  /** Callback when the color transition completes */
-  onColorTransitionComplete?: () => void;
   /** Callback when the entire automated flow completes */
   onFlowComplete?: () => void;
   /** Whether the chatbot is visible */
@@ -44,32 +40,23 @@ interface AnimatedChatbotProps {
 const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   autoStart = false,
   autoStartDelay = 0,
-  onColorTransitionComplete,
   onFlowComplete,
   isVisible = true,
 }) => {
-  const {
-    saturationState,
-    saturationValue,
-    startColorTransition,
-    resetColorState,
-  } = useColorTransition({
-    onTransitionComplete: onColorTransitionComplete,
-  });
+  const [inputValue, setInputValue] = useState('');
+  const [ellipsisCount, setEllipsisCount] = useState(0);
 
   const {
     messages,
     isFlowActive,
+    hasStarted,
     resetFlow,
     messagesEndRef,
   } = useTypingAnimation({
     autoStart,
     autoStartDelay,
-    onPairComplete: (pairIndex) => {
-      // Start color transition when the first question starts typing
-      if (pairIndex === 0) {
-        startColorTransition();
-      }
+    onPairComplete: () => {
+      // Simplified - no color transitions
     },
     onFlowComplete,
     enabled: isVisible,
@@ -114,36 +101,59 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   };
 
   /**
+   * Animated ellipsis for "Analizando..." state
+   */
+  useEffect(() => {
+    if (!hasStarted && isVisible) {
+      const interval = setInterval(() => {
+        setEllipsisCount(prev => (prev + 1) % 4);
+      }, 500);
+      return () => clearInterval(interval);
+    } else {
+      setEllipsisCount(0);
+    }
+  }, [hasStarted, isVisible]);
+
+  /**
+   * Debug effect to track chatbot state changes
+   */
+  useEffect(() => {
+    console.info('Chatbot state changed:', {
+      isVisible,
+      autoStart,
+      autoStartDelay,
+      hasStarted,
+      isFlowActive,
+      messagesCount: messages.length
+    });
+  }, [isVisible, autoStart, autoStartDelay, hasStarted, isFlowActive, messages.length]);
+
+  /**
    * Reset state when component becomes invisible
    */
   useEffect(() => {
     if (!isVisible) {
-      resetColorState();
       resetFlow();
+      setInputValue('');
     }
-  }, [isVisible, resetColorState, resetFlow]);
+  }, [isVisible, resetFlow]);
 
   if (!isVisible) {
     return null;
   }
 
   return (
-    <ChatbotContainer
-      $saturation={saturationValue}
-      variants={colorTransitionVariants}
-      animate={saturationState}
-      initial="muted"
-    >
+    <ChatbotContainer $saturation={1}>
       <ChatHeader>
-        <BotIcon $saturation={saturationValue}>
+        <BotIcon $saturation={1}>
           <FaRobot />
         </BotIcon>
         <HeaderText>
-          <HeaderTitle $saturation={saturationValue}>
+          <HeaderTitle $saturation={1}>
             Asistente de Email
           </HeaderTitle>
-          <HeaderSubtitle $saturation={saturationValue}>
-            Analizando el hilo de correos...
+          <HeaderSubtitle $saturation={1}>
+            {hasStarted ? (isFlowActive ? 'Procesando preguntas...' : 'Análisis completado') : `Analizando el hilo de correos${'.'.repeat(ellipsisCount)}`}
           </HeaderSubtitle>
         </HeaderText>
       </ChatHeader>
@@ -163,13 +173,11 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
                   timestamp={new Date()}
                   shouldType={true}
                   typingSpeed={'typingSpeed' in message ? message.typingSpeed : 30}
-                  saturation={saturationValue}
                   onTypingComplete={handleMessageTypingComplete}
                   showIcons={true}
                 />
                 {showTypingIndicator && (
                   <TypingIndicator
-                    saturation={saturationValue}
                     isVisible={true}
                   />
                 )}
@@ -179,6 +187,58 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
         </AnimatePresence>
         <div ref={messagesEndRef} />
       </MessagesContainer>
+
+      {/* Input field and send button */}
+      <div style={{
+        display: 'flex',
+        gap: '0.5rem',
+        padding: '1rem',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter' && inputValue.trim()) {
+              setInputValue('');
+            }
+          }}
+          placeholder="Escribe tu pregunta..."
+          style={{
+            flex: 1,
+            padding: '0.75rem',
+            borderRadius: '0.5rem',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            color: '#ffffff',
+            fontSize: '0.9rem',
+            outline: 'none'
+          }}
+        />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            if (inputValue.trim()) {
+              setInputValue('');
+            }
+          }}
+          style={{
+            padding: '0.75rem 1rem',
+            borderRadius: '0.5rem',
+            border: 'none',
+            backgroundColor: '#1a73e8',
+            color: '#ffffff',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <FaArrowRight />
+        </motion.button>
+      </div>
     </ChatbotContainer>
   );
 };

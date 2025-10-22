@@ -84,11 +84,27 @@ export const useEmailScroll = (
     const deltaTime = timestamp - lastTimestampRef.current;
     lastTimestampRef.current = timestamp;
     
-    // Calculate scroll distance based on speed and time delta
-    const scrollDistance = (scrollSpeed * deltaTime) / 1000;
+    // Get current scroll position
+    const currentScrollTop = container.scrollTop;
+    
+    // Calculate current progress as a decimal (0-1)
+    const progressDecimal = maxScroll > 0 ? currentScrollTop / maxScroll : 0;
+    
+    // Calculate acceleration factor
+    // Start with normal speed (1x) and increase extremely fast after 10% progress
+    let accelerationFactor = 1;
+    
+    if (progressDecimal > 0.1) {
+      // After 10% progress, increase speed dramatically
+      const progressAfter10 = (progressDecimal - 0.1) / 0.9; // Normalize progress from 10% to 100%
+      accelerationFactor = 1 + (25 * Math.pow(progressAfter10, 3)); // Acceleration curve: 1x to 26x (much faster)
+    }
+    
+    // Calculate scroll distance based on speed, time delta, and acceleration
+    const scrollDistance = (scrollSpeed * deltaTime * accelerationFactor) / 1000;
     
     // Update scroll position
-    const newScrollTop = Math.min(container.scrollTop + scrollDistance, maxScroll);
+    const newScrollTop = Math.min(currentScrollTop + scrollDistance, maxScroll);
     container.scrollTop = newScrollTop;
     
     // Update progress

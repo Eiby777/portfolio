@@ -28,6 +28,7 @@ export const Container = styled.div`
   padding: 0 1rem;
   position: relative;
   z-index: 2;
+  min-height: 100vh;
 `;
 
 export const SectionTitle = styled(motion.h2)`

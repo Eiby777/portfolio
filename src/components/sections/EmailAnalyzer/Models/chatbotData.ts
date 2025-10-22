@@ -100,11 +100,11 @@ export const chatbotResponses: ChatResponse[] = [
   {
     id: 'response-3',
     questionId: 'question-3',
-    answer: 'David Chen has proposed the following tech stack for the website redesign: Frontend: React with Next.js for Server-Side Rendering, Backend: Node.js with Express, Database: PostgreSQL for content storage and Redis for caching, and Deployment: AWS with CI/CD pipeline. This architecture is designed to ensure performance, scalability, and security.',
+    answer: 'Puede probar este servicio en https://portfolio-abisay.vercel.app/email-analyzer donde podrá experimentar cómo la IA transforma hilos de email complejos en insights accionables y respuestas automatizadas.',
     animationDelay: 6000,
     typingSpeed: 25,
     hasUrl: true,
-    url: 'https://demo.techcorp.com/website-redesign',
+    url: 'https://portfolio-abisay.vercel.app/email-analyzer',
     isTyping: false,
     isComplete: false
   }

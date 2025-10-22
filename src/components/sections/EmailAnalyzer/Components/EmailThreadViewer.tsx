@@ -4,23 +4,11 @@ import type { EmailThread } from '../Models/emailThreadsData';
 import EmailMessage from './EmailMessage';
 import { useEmailScroll } from '../Handlers/useEmailScroll';
 import {
-  ThreadViewerContainer,
-  Sidebar,
-  Logo,
-  Navigation,
-  MainContent,
-  TopBar,
-  SearchBar,
-  Icons,
-  Icon,
-  EmailView,
   ThreadContainer,
   ThreadHeader,
   Subject,
   Participants,
   ThreadDate,
-  ReplySection,
-  ReplyButton,
   threadContainerVariants
 } from '../Styles/EmailThreadStyles';
 
@@ -132,77 +120,55 @@ const EmailThreadViewer: React.FC<EmailThreadViewerProps> = ({
   };
 
   return (
-    <ThreadViewerContainer>
-      {/* Gmail-like Sidebar */}
-      <Sidebar>
-        <Logo>Gmail</Logo>
-        <Navigation>
-          <ul>
-            <li><a href="#" className="active">Inbox</a></li>
-            <li><a href="#">Starred</a></li>
-            <li><a href="#">Important</a></li>
-            <li><a href="#">Sent</a></li>
-            <li><a href="#">Drafts</a></li>
-            <li><a href="#">All Mail</a></li>
-          </ul>
-        </Navigation>
-      </Sidebar>
+    <motion.div
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        overflow: 'hidden',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+        position: 'relative'
+      }}
+    >
+      {/* Email Thread Content */}
+      <div
+        ref={scrollContainerRef}
+        style={{
+          height: '100%',
+          overflowY: 'auto',
+          padding: '1rem'
+        }}
+      >
+        <AnimatePresence>
+          {showThread && (
+            <ThreadContainer
+              as={motion.div}
+              variants={threadContainerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              {/* Thread Header */}
+              <ThreadHeader>
+                <Subject>{thread.subject}</Subject>
+                <Participants>{getParticipantNames()}</Participants>
+                <ThreadDate>{formatThreadDate(thread.createdDate)}</ThreadDate>
+              </ThreadHeader>
 
-      {/* Main Content Area */}
-      <MainContent>
-        {/* Top Bar */}
-        <TopBar>
-          <Icon>☰</Icon>
-          <SearchBar>
-            <input type="search" placeholder="Search Gmail" aria-label="Search" />
-          </SearchBar>
-          <Icons>
-            <Icon>↑</Icon>
-            <Icon>✉</Icon>
-            <Icon>⚙</Icon>
-            <Icon>👤</Icon>
-          </Icons>
-        </TopBar>
-
-        {/* Email Thread */}
-        <EmailView ref={scrollContainerRef}>
-          <AnimatePresence>
-            {showThread && (
-              <ThreadContainer
-                as={motion.div}
-                variants={threadContainerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                {/* Thread Header */}
-                <ThreadHeader>
-                  <Subject>{thread.subject}</Subject>
-                  <Participants>{getParticipantNames()}</Participants>
-                  <ThreadDate>{formatThreadDate(thread.createdDate)}</ThreadDate>
-                </ThreadHeader>
-
-                {/* Email Messages */}
-                {thread.messages.map((message, index) => (
-                  <EmailMessage
-                    key={message.id}
-                    message={message}
-                    index={index}
-                    totalMessages={thread.messages.length}
-                  />
-                ))}
-
-                {/* Reply Section */}
-                <ReplySection>
-                  <ReplyButton>Reply</ReplyButton>
-                  <ReplyButton style={{ backgroundColor: '#5f6368' }}>Reply all</ReplyButton>
-                  <ReplyButton style={{ backgroundColor: '#5f6368' }}>Forward</ReplyButton>
-                </ReplySection>
-              </ThreadContainer>
-            )}
-          </AnimatePresence>
-        </EmailView>
-      </MainContent>
+              {/* Email Messages */}
+              {thread.messages.map((message, index) => (
+                <EmailMessage
+                  key={message.id}
+                  message={message}
+                  index={index}
+                  totalMessages={thread.messages.length}
+                />
+              ))}
+            </ThreadContainer>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Scroll Progress Indicator (for debugging) */}
       {process.env.NODE_ENV === 'development' && (
@@ -220,7 +186,7 @@ const EmailThreadViewer: React.FC<EmailThreadViewerProps> = ({
           {isScrolling ? 'Scrolling' : hasScrolledToEnd ? 'Complete' : 'Ready'} - {Math.round(scrollProgress)}%
         </div>
       )}
-    </ThreadViewerContainer>
+    </motion.div>
   );
 };
 
