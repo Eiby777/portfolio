@@ -50,7 +50,6 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
     messages,
     isFlowActive,
     hasStarted,
-    resetFlow,
     messagesEndRef,
   } = useTypingAnimation({
     autoStart,
@@ -77,13 +76,6 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
       return message.answer;
     }
     return '';
-  };
-
-  /**
-   * Check if message is from user (question) or bot (response)
-   */
-  const isUserMessage = (message: ChatMessageType | ChatResponse): boolean => {
-    return 'question' in message;
   };
 
   /**
