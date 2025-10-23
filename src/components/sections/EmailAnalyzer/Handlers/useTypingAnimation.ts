@@ -10,6 +10,20 @@ interface UseTypingAnimationOptions {
   enabled?: boolean;
 }
 
+// Interface para el estado de cada mensaje
+interface MessageState {
+  message: ChatMessageType | ChatResponse;
+  mounted: boolean;
+  pairIndex: number;
+}
+
+// Interface para el estado de los pares pregunta-respuesta
+interface PairState {
+  questionMounted: boolean;
+  responseMounted: boolean;
+  timing: number; // Timing específico para este par
+}
+
 interface UseTypingAnimationReturn {
   messages: Array<ChatMessageType | ChatResponse>;
   isFlowActive: boolean;
@@ -27,39 +41,48 @@ export const useTypingAnimation = ({
   onFlowComplete,
   enabled = true,
 }: UseTypingAnimationOptions = {}): UseTypingAnimationReturn => {
-  const [messages, setMessages] = useState<Array<ChatMessageType | ChatResponse>>([]);
+  const [messageStates, setMessageStates] = useState<MessageState[]>([]);
+  const [pairStates, setPairStates] = useState<PairState[]>([]);
   const [isFlowActive, setIsFlowActive] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<NodeJS.Timeout[]>([]);
-  const isStartingRef = useRef(false); // Prevenir múltiples inicios
+  const isStartingRef = useRef(false);
 
-  // Calcular tiempos absolutos para cada mensaje
-  const calculateMessageTimings = useCallback((delay: number) => {
-    const timings: Array<{ message: ChatMessageType | ChatResponse; timestamp: number; pairIndex: number }> = [];
-
+  // Inicializar los estados de los pares
+  const initializePairStates = useCallback(() => {
+    const pairs: PairState[] = chatbotData.questions.map((_, index) => ({
+      questionMounted: false,
+      responseMounted: false,
+      timing: autoStartDelay + (index * 5000) // 5 segundos entre cada par
+    }));
+    setPairStates(pairs);
+    
+    // Inicializar estados de mensajes
+    const messages: MessageState[] = [];
     chatbotData.questions.forEach((question, index) => {
-      // Pregunta aparece primero
-      const questionTime = delay + (index * 5000); // 5 segundos entre cada par
-      timings.push({
+      messages.push({
         message: question,
-        timestamp: questionTime,
+        mounted: false,
         pairIndex: index
       });
-
-      // Respuesta aparece 2 segundos después de la pregunta
+      
       const response = chatbotData.responses.find(r => r.questionId === question.id);
       if (response) {
-        timings.push({
+        messages.push({
           message: response,
-          timestamp: questionTime + 2000,
+          mounted: false,
           pairIndex: index
         });
       }
     });
+    setMessageStates(messages);
+  }, [autoStartDelay]);
 
-    return timings;
-  }, []);
+  // Obtener mensajes montados para mostrar
+  const mountedMessages = messageStates
+    .filter(state => state.mounted)
+    .map(state => state.message);
 
   const resetFlow = useCallback(() => {
     console.info('Resetting flow');
@@ -68,11 +91,141 @@ export const useTypingAnimation = ({
     timersRef.current.forEach(timer => clearTimeout(timer));
     timersRef.current = [];
 
-    setMessages([]);
+    setMessageStates([]);
+    setPairStates([]);
     setIsFlowActive(false);
     setHasStarted(false);
     isStartingRef.current = false;
   }, []);
+
+  // Montar una pregunta específica
+  const mountQuestion = useCallback((pairIndex: number) => {
+    console.info(`Mounting question ${pairIndex}`);
+    
+    setMessageStates(prev => 
+      prev.map(state => 
+        state.pairIndex === pairIndex && 'question' in state.message
+          ? { ...state, mounted: true }
+          : state
+      )
+    );
+    
+    setPairStates(prev =>
+      prev.map((pair, index) =>
+        index === pairIndex
+          ? { ...pair, questionMounted: true }
+          : pair
+      )
+    );
+  }, []);
+
+  // Montar una respuesta específica
+  const mountResponse = useCallback((pairIndex: number) => {
+    console.info(`Mounting response ${pairIndex}`);
+    
+    setMessageStates(prev => 
+      prev.map(state => 
+        state.pairIndex === pairIndex && 'answer' in state.message
+          ? { ...state, mounted: true }
+          : state
+      )
+    );
+    
+    setPairStates(prev =>
+      prev.map((pair, index) =>
+        index === pairIndex
+          ? { ...pair, responseMounted: true }
+          : pair
+      )
+    );
+    
+    // Notificar completado del par
+    if (onPairComplete) {
+      onPairComplete(pairIndex);
+    }
+  }, [onPairComplete]);
+
+  // Efecto para manejar la lógica de montaje
+  useEffect(() => {
+    if (!hasStarted || !isFlowActive) return;
+
+    // Programar montaje de la primera pregunta
+    const firstQuestionTimer = setTimeout(() => {
+      mountQuestion(0);
+    }, autoStartDelay);
+    
+    timersRef.current.push(firstQuestionTimer);
+
+    return () => {
+      clearTimeout(firstQuestionTimer);
+    };
+  }, [hasStarted, isFlowActive, autoStartDelay, mountQuestion]);
+
+  // Efecto para manejar el montaje secuencial
+  useEffect(() => {
+    if (!hasStarted || !isFlowActive || pairStates.length === 0) return;
+
+    // Revisar cada par para determinar qué se puede montar
+    pairStates.forEach((pair, index) => {
+      // Si la pregunta no está montada
+      if (!pair.questionMounted) {
+        // Para la primera pregunta, montar inmediatamente con el timing
+        if (index === 0) {
+          const timer = setTimeout(() => {
+            mountQuestion(index);
+          }, pair.timing);
+          
+          timersRef.current.push(timer);
+        }
+        // Para las siguientes preguntas, montar solo si el par anterior está completamente montado (pregunta y respuesta)
+        else if (pairStates[index - 1] &&
+                 pairStates[index - 1].questionMounted &&
+                 pairStates[index - 1].responseMounted) {
+          const timer = setTimeout(() => {
+            mountQuestion(index);
+          }, pair.timing);
+          
+          timersRef.current.push(timer);
+        }
+      }
+      
+      // Si la pregunta está montada pero la respuesta no, montar la respuesta
+      else if (!pair.responseMounted) {
+        const questionMessage = messageStates.find(
+          state => state.pairIndex === index && 'question' in state.message
+        );
+        
+        if (questionMessage && questionMessage.mounted) {
+          // Calcular tiempo de escritura de la pregunta + pausa
+          const question = questionMessage.message as ChatMessageType;
+          const typingDuration = question.question.length * question.typingSpeed;
+          
+          const timer = setTimeout(() => {
+            mountResponse(index);
+          }, typingDuration + 1000); // 1 segundo de pausa después de escribir
+          
+          timersRef.current.push(timer);
+        }
+      }
+      
+      // Si es el último par y ambas partes están montadas, completar el flujo
+      else if (index === pairStates.length - 1 && pair.questionMounted && pair.responseMounted) {
+        const timer = setTimeout(() => {
+          console.info('Flow complete');
+          setIsFlowActive(false);
+          if (onFlowComplete) {
+            onFlowComplete();
+          }
+        }, 500);
+        
+        timersRef.current.push(timer);
+      }
+    });
+
+    return () => {
+      // Los timers se limpian en resetFlow
+    };
+  }, [hasStarted, isFlowActive, pairStates, messageStates, mountQuestion, mountResponse, onFlowComplete]);
 
   const startFlow = useCallback(() => {
     // Prevenir múltiples ejecuciones simultáneas
@@ -89,44 +242,10 @@ export const useTypingAnimation = ({
     isStartingRef.current = true;
     setHasStarted(true);
     setIsFlowActive(true);
-    setMessages([]);
-
-    const timings = calculateMessageTimings(autoStartDelay);
-    let lastPairIndex = -1;
-
-    // Programar cada mensaje
-    timings.forEach(({ message, timestamp, pairIndex }, idx) => {
-      const timer = setTimeout(() => {
-        console.info('Showing message', {
-          messageId: message.id,
-          type: 'question' in message ? 'question' : 'response'
-        });
-
-        setMessages(prev => [...prev, message]);
-
-        // Notificar cuando se completa un par (después de mostrar la respuesta)
-        if ('answer' in message && pairIndex !== lastPairIndex) {
-          lastPairIndex = pairIndex;
-          if (onPairComplete) {
-            onPairComplete(pairIndex);
-          }
-        }
-
-        // Si es el último mensaje, completar el flujo
-        if (idx === timings.length - 1) {
-          console.info('Flow complete');
-          setTimeout(() => {
-            setIsFlowActive(false);
-            if (onFlowComplete) {
-              onFlowComplete();
-            }
-          }, 500); // Pequeño delay para que se vea el último mensaje
-        }
-      }, timestamp);
-
-      timersRef.current.push(timer);
-    });
-  }, [enabled, hasStarted, autoStartDelay, calculateMessageTimings, onPairComplete, onFlowComplete]);
+    
+    // Inicializar estados
+    initializePairStates();
+  }, [enabled, hasStarted, initializePairStates]);
 
   // AutoStart - Solo se ejecuta UNA VEZ cuando las condiciones son correctas
   useEffect(() => {
@@ -134,29 +253,12 @@ export const useTypingAnimation = ({
       console.info('Auto-starting flow');
       startFlow();
     }
-  }, [autoStart, enabled]); // NO incluir startFlow ni hasStarted aquí
-
-  // Reset cuando se deshabilita
-  useEffect(() => {
-    if (!enabled && hasStarted) {
-      console.info('Disabled, resetting flow');
-      resetFlow();
-    }
-  }, [enabled, hasStarted, resetFlow]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      console.info('Unmounting, cleaning up timers');
-      timersRef.current.forEach(timer => clearTimeout(timer));
-      timersRef.current = [];
-    };
-  }, []);
+  }, [autoStart, enabled, startFlow]);
 
   return {
-    messages,
+    messages: mountedMessages,
     isFlowActive,
-    currentQuestionIndex: Math.floor(messages.length / 2),
+    currentQuestionIndex: Math.floor(mountedMessages.length / 2),
     hasStarted,
     startFlow,
     resetFlow,

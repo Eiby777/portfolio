@@ -84,7 +84,7 @@ export const chatbotResponses: ChatResponse[] = [
     questionId: 'question-1',
     answer: 'Based on the email thread, the main objectives of the website redesign project are: 1) Improve user experience and navigation, 2) Update visual design to match new brand guidelines, 3) Optimize for mobile responsiveness, and 4) Increase conversion rates by 15%. The project is planned for Q4 with an estimated timeline of 8-10 weeks from kickoff to launch.',
     animationDelay: 2000,
-    typingSpeed: 25,
+    typingSpeed: 10, // Further reduced from 15 to make ellipsis animation even shorter
     isTyping: false,
     isComplete: false
   },
@@ -93,7 +93,7 @@ export const chatbotResponses: ChatResponse[] = [
     questionId: 'question-2',
     answer: 'The key team members involved in the project are: Sarah Johnson (Project Manager), Mike Wilson (Head of Marketing), David Chen (Lead Developer), and Emily Rodriguez (Senior UI/UX Designer). Sarah is leading the project, Mike is handling marketing requirements and SEO, David is responsible for technical architecture, and Emily is leading the design work.',
     animationDelay: 4000,
-    typingSpeed: 25,
+    typingSpeed: 10, // Further reduced from 15 to make ellipsis animation even shorter
     isTyping: false,
     isComplete: false
   },
@@ -102,7 +102,7 @@ export const chatbotResponses: ChatResponse[] = [
     questionId: 'question-3',
     answer: 'Puede probar este servicio en https://portfolio-abisay.vercel.app/email-analyzer donde podrá experimentar cómo la IA transforma hilos de email complejos en insights accionables y respuestas automatizadas.',
     animationDelay: 6000,
-    typingSpeed: 25,
+    typingSpeed: 10, // Further reduced from 15 to make ellipsis animation even shorter
     hasUrl: true,
     url: 'https://portfolio-abisay.vercel.app/email-analyzer',
     isTyping: false,

@@ -67,7 +67,8 @@ export const ChatbotContainer = styled(motion.div)<{ $saturation: number }>`
   padding: 1.5rem;
   border: 1px solid ${({ $saturation }) => getInterpolatedColor($saturation, 'border')};
   backdrop-filter: blur(10px);
-  height: 500px;
+  height: 650px; /* Increased from 500px to 650px */
+  width: 450px;   /* Added width to make it wider */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -90,15 +91,15 @@ export const ChatHeader = styled.div`
  * Bot icon with dynamic colors
  */
 export const BotIcon = styled(motion.div)<{ $saturation: number }>`
-  width: 40px;
-  height: 40px;
+  width: 50px;     /* Increased from 40px to 50px */
+  height: 50px;    /* Increased from 40px to 50px */
   background: ${({ $saturation }) => getInterpolatedColor($saturation, 'botIcon')};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.4rem; /* Increased from 1.2rem to 1.4rem */
   transition: background 0.3s ease;
 `;
 

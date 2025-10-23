@@ -74,7 +74,7 @@ const SolutionReveal: React.FC = () => {
             autoStartDelay={1000}
             onTransformComplete={() => console.info('Solution reveal transform completed')}
             onDisappearComplete={() => console.info('Solution reveal disappear completed')}
-            size={80}
+            size={120}  /* Increased from 80 to 120 */
             emailContent="Transformando email en insights..."
             isVisible={true}
           />

@@ -118,15 +118,7 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
     }
   }, [hasStarted, isVisible]);
 
-  /**
-   * Reset state when component becomes invisible
-   */
-  useEffect(() => {
-    if (!isVisible) {
-      //resetFlow();
-      //setInputValue('');
-    }
-  }, [isVisible, resetFlow]);
+
 
   if (!isVisible) {
     return null;
