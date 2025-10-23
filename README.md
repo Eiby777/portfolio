@@ -71,3 +71,45 @@ export default defineConfig([
   },
 ])
 ```
+
+## TypeScript Type Checking
+
+### Issue with Direct TypeScript Checking
+
+When running `bun x tsc --noEmit` directly on individual `.tsx` files, TypeScript encounters JSX errors because it's not using the project configuration. This happens because:
+
+1. TypeScript needs to know how to handle JSX syntax (configured in `tsconfig.app.json`)
+2. Individual file checking doesn't load the project's compiler options
+3. JSX transformation settings are missing when checking files in isolation
+
+### Solution: Project-Based Type Checking
+
+Instead of checking individual files, use the provided wrapper script that checks the entire project with proper configuration:
+
+```bash
+# Use the npm script
+npm run type-check
+
+# Or run the script directly
+bash scripts/type-check.sh
+```
+
+This script:
+- Uses the project's TypeScript configuration (`tsconfig.app.json`)
+- Properly handles JSX syntax
+- Provides clear error messages with colors
+- Checks the entire project for type consistency
+
+### For Automation Maintainers
+
+If you're maintaining an automation that currently runs:
+```bash
+bun x tsc --noEmit [file-path]
+```
+
+Please update it to use:
+```bash
+npm run type-check
+```
+
+This ensures proper TypeScript checking with all project configurations applied.
