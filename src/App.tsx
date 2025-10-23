@@ -5,6 +5,7 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import EmailAnalyzer from './components/sections/EmailAnalyzer';
 import InvoiceExtractor from './components/sections/InvoiceExtractor';
+import QuoteComparator from './components/sections/QuoteComparator';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -88,6 +89,7 @@ function App() {
           <About />
           <EmailAnalyzer />
           <InvoiceExtractor />
+          <QuoteComparator />
           {/* Other sections will be added here */}
         </MainContent>
       </AppContainer>
