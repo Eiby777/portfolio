@@ -121,7 +121,7 @@ export const projects: Project[] = [
     solution: 'Chatbot entrenado con políticas internas para respuestas precisas.',
     techStack: ['Python', 'NLP', 'Machine Learning', 'React'],
     features: ['Respuestas automáticas', 'Integración WhatsApp', 'Aprendizaje continuo'],
-    demoUrl: '#response-generator',
+    demoUrl: '#chatbot',
     color: '#9933ff',
     bgColor: 'linear-gradient(135deg, #1a0033 0%, #330066 50%, #4d0099 100%)',
     secondaryColor: '#cc66ff'
