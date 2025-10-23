@@ -119,26 +119,12 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   }, [hasStarted, isVisible]);
 
   /**
-   * Debug effect to track chatbot state changes
-   */
-  useEffect(() => {
-    console.info('Chatbot state changed:', {
-      isVisible,
-      autoStart,
-      autoStartDelay,
-      hasStarted,
-      isFlowActive,
-      messagesCount: messages.length
-    });
-  }, [isVisible, autoStart, autoStartDelay, hasStarted, isFlowActive, messages.length]);
-
-  /**
    * Reset state when component becomes invisible
    */
   useEffect(() => {
     if (!isVisible) {
-      resetFlow();
-      setInputValue('');
+      //resetFlow();
+      //setInputValue('');
     }
   }, [isVisible, resetFlow]);
 

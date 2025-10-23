@@ -32,120 +32,37 @@ export const useTypingAnimation = ({
   const [hasStarted, setHasStarted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<NodeJS.Timeout[]>([]);
-  const instanceId = useRef<string>(`instance-${Date.now()}-${Math.random()}`);
-
-  console.info('useTypingAnimation initialized', { 
-    instanceId: instanceId.current,
-    autoStart, 
-    autoStartDelay, 
-    enabled 
-  });
+  const isStartingRef = useRef(false); // Prevenir múltiples inicios
 
   // Calcular tiempos absolutos para cada mensaje
-  const calculateMessageTimings = useCallback(() => {
-    const timings: Array<{ message: ChatMessageType | ChatResponse; timestamp: number }> = [];
-    let currentTime = autoStartDelay;
+  const calculateMessageTimings = useCallback((delay: number) => {
+    const timings: Array<{ message: ChatMessageType | ChatResponse; timestamp: number; pairIndex: number }> = [];
 
-    // Agregar preguntas y respuestas intercaladas
     chatbotData.questions.forEach((question, index) => {
-      // Tiempo para la pregunta
-      const questionTime = currentTime + 500 + (index * 4000); // 500ms base + 4s por cada par
+      // Pregunta aparece primero
+      const questionTime = delay + (index * 5000); // 5 segundos entre cada par
       timings.push({
         message: question,
-        timestamp: questionTime
+        timestamp: questionTime,
+        pairIndex: index
       });
 
-      // Encontrar la respuesta correspondiente
+      // Respuesta aparece 2 segundos después de la pregunta
       const response = chatbotData.responses.find(r => r.questionId === question.id);
       if (response) {
-        // Tiempo para la respuesta (2s después de la pregunta)
         timings.push({
           message: response,
-          timestamp: questionTime + 2000
+          timestamp: questionTime + 2000,
+          pairIndex: index
         });
       }
     });
 
-    // Ordenar por timestamp para asegurar el orden correcto
-    timings.sort((a, b) => a.timestamp - b.timestamp);
-
-    console.info('Message timings calculated', {
-      instanceId: instanceId.current,
-      timings: timings.map(t => ({
-        id: t.message.id,
-        type: 'question' in t.message ? 'question' : 'response',
-        timestamp: t.timestamp
-      }))
-    });
-
     return timings;
-  }, [autoStartDelay]);
-
-  const startFlow = useCallback(() => {
-    console.info('startFlow called', { 
-      instanceId: instanceId.current,
-      enabled, 
-      hasStarted 
-    });
-    
-    if (!enabled || hasStarted) {
-      console.info('Flow start blocked', { enabled, hasStarted });
-      return;
-    }
-
-    console.info('Starting flow', { instanceId: instanceId.current });
-    setHasStarted(true);
-    setIsFlowActive(true);
-    setMessages([]);
-
-    const timings = calculateMessageTimings();
-    const startTime = Date.now();
-
-    // Programar cada mensaje con su tiempo absoluto
-    timings.forEach(({ message, timestamp }) => {
-      const delay = timestamp;
-      
-      console.info('Scheduling message', {
-        instanceId: instanceId.current,
-        messageId: message.id,
-        type: 'question' in message ? 'question' : 'response',
-        delay
-      });
-
-      const timer = setTimeout(() => {
-        console.info('Showing message', {
-          instanceId: instanceId.current,
-          messageId: message.id,
-          type: 'question' in message ? 'question' : 'response'
-        });
-
-        setMessages(prev => {
-          const newMessages = [...prev, message];
-          console.info('Messages updated', {
-            instanceId: instanceId.current,
-            count: newMessages.length,
-            lastMessageId: message.id
-          });
-          return newMessages;
-        });
-
-        // Verificar si es el último mensaje
-        const isLastMessage = timings[timings.length - 1].message.id === message.id;
-        if (isLastMessage) {
-          console.info('All messages shown, completing flow', { instanceId: instanceId.current });
-          setIsFlowActive(false);
-          if (onFlowComplete) {
-            onFlowComplete();
-          }
-        }
-      }, delay);
-
-      timersRef.current.push(timer);
-    });
-  }, [enabled, hasStarted, calculateMessageTimings, onFlowComplete]);
+  }, []);
 
   const resetFlow = useCallback(() => {
-    console.info('resetFlow called', { instanceId: instanceId.current });
+    console.info('Resetting flow');
     
     // Limpiar todos los timers
     timersRef.current.forEach(timer => clearTimeout(timer));
@@ -154,37 +71,92 @@ export const useTypingAnimation = ({
     setMessages([]);
     setIsFlowActive(false);
     setHasStarted(false);
-    
-    console.info('Flow reset complete', { instanceId: instanceId.current });
+    isStartingRef.current = false;
   }, []);
 
-  // AutoStart
+  const startFlow = useCallback(() => {
+    // Prevenir múltiples ejecuciones simultáneas
+    if (isStartingRef.current || !enabled || hasStarted) {
+      console.info('Flow start blocked', { 
+        isStarting: isStartingRef.current, 
+        enabled, 
+        hasStarted 
+      });
+      return;
+    }
+
+    console.info('Starting flow');
+    isStartingRef.current = true;
+    setHasStarted(true);
+    setIsFlowActive(true);
+    setMessages([]);
+
+    const timings = calculateMessageTimings(autoStartDelay);
+    let lastPairIndex = -1;
+
+    // Programar cada mensaje
+    timings.forEach(({ message, timestamp, pairIndex }, idx) => {
+      const timer = setTimeout(() => {
+        console.info('Showing message', {
+          messageId: message.id,
+          type: 'question' in message ? 'question' : 'response'
+        });
+
+        setMessages(prev => [...prev, message]);
+
+        // Notificar cuando se completa un par (después de mostrar la respuesta)
+        if ('answer' in message && pairIndex !== lastPairIndex) {
+          lastPairIndex = pairIndex;
+          if (onPairComplete) {
+            onPairComplete(pairIndex);
+          }
+        }
+
+        // Si es el último mensaje, completar el flujo
+        if (idx === timings.length - 1) {
+          console.info('Flow complete');
+          setTimeout(() => {
+            setIsFlowActive(false);
+            if (onFlowComplete) {
+              onFlowComplete();
+            }
+          }, 500); // Pequeño delay para que se vea el último mensaje
+        }
+      }, timestamp);
+
+      timersRef.current.push(timer);
+    });
+  }, [enabled, hasStarted, autoStartDelay, calculateMessageTimings, onPairComplete, onFlowComplete]);
+
+  // AutoStart - Solo se ejecuta UNA VEZ cuando las condiciones son correctas
   useEffect(() => {
-    if (autoStart && enabled && !hasStarted) {
-      console.info('Auto starting flow', { instanceId: instanceId.current });
+    if (autoStart && enabled && !hasStarted && !isStartingRef.current) {
+      console.info('Auto-starting flow');
       startFlow();
     }
-  }, [autoStart, enabled, hasStarted, startFlow]);
+  }, [autoStart, enabled]); // NO incluir startFlow ni hasStarted aquí
 
   // Reset cuando se deshabilita
   useEffect(() => {
-    if (!enabled) {
-      console.info('Enabled is false, resetting flow', { instanceId: instanceId.current });
+    if (!enabled && hasStarted) {
+      console.info('Disabled, resetting flow');
       resetFlow();
     }
-  }, [enabled, resetFlow]);
+  }, [enabled, hasStarted, resetFlow]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      console.info('Unmounting, cleaning up timers');
       timersRef.current.forEach(timer => clearTimeout(timer));
+      timersRef.current = [];
     };
   }, []);
 
   return {
     messages,
     isFlowActive,
-    currentQuestionIndex: Math.floor(messages.length / 2), // Approximate
+    currentQuestionIndex: Math.floor(messages.length / 2),
     hasStarted,
     startFlow,
     resetFlow,
