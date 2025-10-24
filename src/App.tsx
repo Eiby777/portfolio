@@ -7,6 +7,7 @@ import EmailAnalyzer from './components/sections/EmailAnalyzer';
 import InvoiceExtractor from './components/sections/InvoiceExtractor';
 import Chatbot from './components/sections/Chatbot';
 import QuoteComparator from './components/sections/QuoteComparator';
+import CvAnalyzer from './components/sections/CvAnalyzer';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -90,6 +91,7 @@ function App() {
           <About />
           <EmailAnalyzer />
           <InvoiceExtractor />
+          <CvAnalyzer />
           <Chatbot />
           <QuoteComparator />
           {/* Other sections will be added here */}
