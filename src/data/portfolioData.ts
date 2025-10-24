@@ -147,7 +147,7 @@ export const projects: Project[] = [
     solution: 'Sistema automatizado que evalúa y clasifica candidatos por relevancia.',
     techStack: ['Python', 'NLP', 'Machine Learning', 'React'],
     features: ['Filtrado automático', 'Ranking de candidatos', 'Preguntas personalizadas'],
-    demoUrl: '#cv-analyzer',
+    demoUrl: 'https://abisaymedinarosario.github.io/cv-analyzer',
     color: '#ff3366',
     bgColor: 'linear-gradient(135deg, #330011 0%, #660022 50%, #990033 100%)',
     secondaryColor: '#ff6699'
