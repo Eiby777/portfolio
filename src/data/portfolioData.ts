@@ -160,7 +160,7 @@ export const projects: Project[] = [
     solution: 'Sistema automático que transcribe y extrae información clave de reuniones.',
     techStack: ['Python', 'Speech Recognition', 'NLP', 'React'],
     features: ['Transcripción automática', 'Generación de minutos', 'Asignación de responsables'],
-    demoUrl: '#transcriber',
+    demoUrl: '#meeting-transcriptor',
     color: '#00ffff',
     bgColor: 'linear-gradient(135deg, #001a1a 0%, #003333 50%, #004d4d 100%)',
     secondaryColor: '#66ffff'
