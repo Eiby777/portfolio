@@ -173,7 +173,7 @@ export const projects: Project[] = [
     solution: 'Sistema predictivo que identifica anomalías y oportunidades de negocio.',
     techStack: ['Python', 'Machine Learning', 'Data Analysis', 'React'],
     features: ['Detección de anomalías', 'Predicción de stock', 'Alertas inteligentes'],
-    demoUrl: '#anomaly-detector',
+    demoUrl: 'https://abisayai.com/detector-anomalias-ventas',
     color: '#ffcc00',
     bgColor: 'linear-gradient(135deg, #331a00 0%, #663300 50%, #994d00 100%)',
     secondaryColor: '#ffdd33'
