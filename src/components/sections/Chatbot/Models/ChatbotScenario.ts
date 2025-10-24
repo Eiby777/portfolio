@@ -53,22 +53,22 @@ export class ChatbotScenario {
       new ChatbotMessage(
         'chatbot',
         '¡Hola! Según tu política logística, el envío express se ofrece en Santo Domingo y Santiago con un costo adicional de RD$350.',
-        1100
+        770
       ),
       new ChatbotMessage(
         'customer',
         '¿Y cuánto tardaría en llegar si hago el pedido hoy?',
-        4600
+        3220
       ),
       new ChatbotMessage(
         'chatbot',
         'Para órdenes confirmadas antes de las 4:00 p.m., la entrega express llega en menos de 24 horas.',
-        6100
+        4270
       ),
       new ChatbotMessage(
         'chatbot',
         '¿Deseas que le envíe al cliente un enlace de pago o que programe una llamada con un agente?',
-        9500
+        6650
       )
     ]);
   }
