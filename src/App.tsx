@@ -5,9 +5,11 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import EmailAnalyzer from './components/sections/EmailAnalyzer';
 import InvoiceExtractor from './components/sections/InvoiceExtractor';
+import SalesAnomalyDetector from './components/sections/SalesAnomalyDetector';
 import Chatbot from './components/sections/Chatbot';
 import QuoteComparator from './components/sections/QuoteComparator';
 import MeetingTranscriptor from './components/sections/MeetingTranscriptor';
+import CvAnalyzer from './components/sections/CvAnalyzer';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -92,6 +94,8 @@ function App() {
           <EmailAnalyzer />
           <InvoiceExtractor />
           <MeetingTranscriptor />
+          <CvAnalyzer />
+          <SalesAnomalyDetector />
           <Chatbot />
           <QuoteComparator />
           {/* Other sections will be added here */}

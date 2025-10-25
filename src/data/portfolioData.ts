@@ -147,7 +147,7 @@ export const projects: Project[] = [
     solution: 'Sistema automatizado que evalúa y clasifica candidatos por relevancia.',
     techStack: ['Python', 'NLP', 'Machine Learning', 'React'],
     features: ['Filtrado automático', 'Ranking de candidatos', 'Preguntas personalizadas'],
-    demoUrl: '#cv-analyzer',
+    demoUrl: 'https://abisaymedinarosario.github.io/cv-analyzer',
     color: '#ff3366',
     bgColor: 'linear-gradient(135deg, #330011 0%, #660022 50%, #990033 100%)',
     secondaryColor: '#ff6699'
@@ -173,7 +173,7 @@ export const projects: Project[] = [
     solution: 'Sistema predictivo que identifica anomalías y oportunidades de negocio.',
     techStack: ['Python', 'Machine Learning', 'Data Analysis', 'React'],
     features: ['Detección de anomalías', 'Predicción de stock', 'Alertas inteligentes'],
-    demoUrl: '#anomaly-detector',
+    demoUrl: 'https://abisayai.com/detector-anomalias-ventas',
     color: '#ffcc00',
     bgColor: 'linear-gradient(135deg, #331a00 0%, #663300 50%, #994d00 100%)',
     secondaryColor: '#ffdd33'
