@@ -88,6 +88,7 @@ function App() {
     <>
       <GlobalStyle />
       <AppContainer>
+        <ParticlesBackground />
         <Navigation sections={navigationSections} />
         <MainContent>
           <Hero />
