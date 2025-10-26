@@ -8,6 +8,7 @@ import InvoiceExtractor from './components/sections/InvoiceExtractor';
 import SalesAnomalyDetector from './components/sections/SalesAnomalyDetector';
 import Chatbot from './components/sections/Chatbot';
 import QuoteComparator from './components/sections/QuoteComparator';
+import MeetingTranscriptor from './components/sections/MeetingTranscriptor';
 import CvAnalyzer from './components/sections/CvAnalyzer';
 
 const GlobalStyle = createGlobalStyle`
@@ -92,6 +93,7 @@ function App() {
           <About />
           <EmailAnalyzer />
           <InvoiceExtractor />
+          <MeetingTranscriptor />
           <CvAnalyzer />
           <SalesAnomalyDetector />
           <Chatbot />
