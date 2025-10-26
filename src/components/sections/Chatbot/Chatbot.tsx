@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import AnimationNavigation from '../../ui/AnimationNavigation';
+import AnimatedBackground from '../../common/AnimatedBackground';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useChatbotAnimation } from './Handlers/useChatbotAnimation';
@@ -14,6 +15,7 @@ const Chatbot: React.FC = () => {
 
   return (
     <ProjectContainer id="chatbot" $bgColor={project.bgColor}>
+      <AnimatedBackground type="chatbot" />
       <Container>
         <AnimatePresence mode="wait">
           {phase === 'intro' && (

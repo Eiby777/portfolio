@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import AnimationNavigation from '../../ui/AnimationNavigation';
+import AnimatedBackground from '../../common/AnimatedBackground';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useInvoiceAnimation } from './Handlers/useInvoiceAnimation';
@@ -14,6 +15,7 @@ const InvoiceExtractor: React.FC = () => {
 
   return (
     <ProjectContainer id="invoice-extractor" $bgColor={project.bgColor}>
+      <AnimatedBackground type="invoice" />
       <Container>
         <AnimatePresence mode="wait">
           {phase === 'intro' && (

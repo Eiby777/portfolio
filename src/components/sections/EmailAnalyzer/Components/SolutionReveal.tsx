@@ -52,7 +52,7 @@ const SolutionReveal: React.FC = () => {
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '800px',
+          maxWidth: '900px', /* Increased from 800px to 900px to accommodate larger chatbot */
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -142,7 +142,7 @@ const SolutionReveal: React.FC = () => {
           transition={{ duration: 2, delay: 2, ease: 'easeInOut' }}
           style={{
             flex: 1,
-            maxWidth: '400px'
+            maxWidth: '650px' /* Increased from 400px to 650px to accommodate larger chatbot */
           }}
         >
           <AnimatedChatbot

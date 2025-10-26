@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import AnimationNavigation from '../../ui/AnimationNavigation';
+import AnimatedBackground from '../../common/AnimatedBackground';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useMeetingAnimation } from './Handlers/useMeetingAnimation';
@@ -14,6 +15,7 @@ const MeetingTranscriptor: React.FC = () => {
 
   return (
     <ProjectContainer id="meeting-transcriptor" $bgColor={project.bgColor}>
+      <AnimatedBackground type="meeting" />
       <Container>
         <AnimatePresence mode="wait">
           {phase === 'intro' && <IntroScene key="intro-scene" onStart={start} isPlaying={isPlaying} />}

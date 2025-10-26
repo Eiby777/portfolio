@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import AnimationNavigation from '../../ui/AnimationNavigation';
+import AnimatedBackground from '../../common/AnimatedBackground';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useQuoteComparatorAnimation } from './Handlers/useQuoteComparatorAnimation';
@@ -16,6 +17,7 @@ const QuoteComparator: React.FC = () => {
 
   return (
     <ProjectContainer id="quote-comparator" $bgColor={project.bgColor}>
+      <AnimatedBackground type="quote" />
       <Container>
         <AnimatePresence mode="wait">
           {phase === 'intro' && (

@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import AnimationNavigation from '../../ui/AnimationNavigation';
+import AnimatedBackground from '../../common/AnimatedBackground';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useCvAnimation } from './Handlers/useCvAnimation';
@@ -16,6 +17,7 @@ const CvAnalyzer: React.FC = () => {
 
   return (
     <ProjectContainer id="cv-analyzer" $bgColor={project.bgColor}>
+      <AnimatedBackground type="cv" />
       <Container>
         <AnimatePresence mode="wait">
           {phase === 'intro' && (

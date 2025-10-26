@@ -1,6 +1,6 @@
 /**
  * Chatbot data model for EmailAnalyzer animation
- * Contains questions and answers related to the email thread content
+ * Contains questions and answers related to email thread content
  */
 
 /**
@@ -11,7 +11,7 @@ export interface ChatMessage {
   id: string;
   /** The question text */
   question: string;
-  /** Animation delay in milliseconds before showing the question */
+  /** Animation delay in milliseconds before showing of the question */
   animationDelay: number;
   /** Typing animation speed in milliseconds per character */
   typingSpeed: number;
@@ -29,9 +29,9 @@ export interface ChatResponse {
   id: string;
   /** The answer text */
   answer: string;
-  /** ID of the question this response answers */
+  /** ID of question this response answers */
   questionId: string;
-  /** Animation delay in milliseconds before showing the response */
+  /** Animation delay in milliseconds before showing of the response */
   animationDelay: number;
   /** Typing animation speed in milliseconds per character */
   typingSpeed: number;
@@ -46,12 +46,12 @@ export interface ChatResponse {
 }
 
 /**
- * Array of 3 questions related to the email thread content
+ * Array of 3 questions related to email thread content
  */
 export const chatbotQuestions: ChatMessage[] = [
   {
     id: 'question-1',
-    question: 'What is the main objective of the website redesign project mentioned in the emails?',
+    question: '¿Cuál es el objetivo principal del proyecto de rediseño del sitio web mencionado en los correos?',
     animationDelay: 1000,
     typingSpeed: 30,
     isTyping: false,
@@ -59,7 +59,7 @@ export const chatbotQuestions: ChatMessage[] = [
   },
   {
     id: 'question-2',
-    question: 'Who are the key team members involved in this project and what are their roles?',
+    question: '¿Quiénes son los miembros clave del equipo involucrados en este proyecto y cuáles son sus roles?',
     animationDelay: 3000,
     typingSpeed: 30,
     isTyping: false,
@@ -67,7 +67,7 @@ export const chatbotQuestions: ChatMessage[] = [
   },
   {
     id: 'question-3',
-    question: 'What technical stack has been proposed for the website redesign?',
+    question: '¿Qué stack técnico se ha propuesto para el rediseño del sitio web?',
     animationDelay: 5000,
     typingSpeed: 30,
     isTyping: false,
@@ -76,13 +76,13 @@ export const chatbotQuestions: ChatMessage[] = [
 ];
 
 /**
- * Array of 3 corresponding answers from the chatbot
+ * Array of 3 corresponding answers from chatbot
  */
 export const chatbotResponses: ChatResponse[] = [
   {
     id: 'response-1',
     questionId: 'question-1',
-    answer: 'Based on the email thread, the main objectives of the website redesign project are: 1) Improve user experience and navigation, 2) Update visual design to match new brand guidelines, 3) Optimize for mobile responsiveness, and 4) Increase conversion rates by 15%. The project is planned for Q4 with an estimated timeline of 8-10 weeks from kickoff to launch.',
+    answer: 'Según el hilo de correos, los objetivos principales del proyecto de rediseño del sitio web son: 1) Mejorar la experiencia del usuario y la navegación, 2) Actualizar el diseño visual para que coincida con las nuevas directrices de marca, 3) Optimizar para la adaptabilidad móvil, y 4) Aumentar las tasas de conversión en un 15%. El proyecto está planeado para el Q4 con un cronograma estimado de 8-10 semanas desde el inicio hasta el lanzamiento.',
     animationDelay: 2000,
     typingSpeed: 10, // Further reduced from 15 to make ellipsis animation even shorter
     isTyping: false,
@@ -91,7 +91,7 @@ export const chatbotResponses: ChatResponse[] = [
   {
     id: 'response-2',
     questionId: 'question-2',
-    answer: 'The key team members involved in the project are: Sarah Johnson (Project Manager), Mike Wilson (Head of Marketing), David Chen (Lead Developer), and Emily Rodriguez (Senior UI/UX Designer). Sarah is leading the project, Mike is handling marketing requirements and SEO, David is responsible for technical architecture, and Emily is leading the design work.',
+    answer: 'Los miembros clave del equipo involucrados en el proyecto son: Sarah Johnson (Gerente de Proyecto), Mike Wilson (Jefe de Marketing), David Chen (Desarrollador Principal), y Emily Rodriguez (Diseñadora UI/UX Senior). Sarah lidera el proyecto, Mike maneja los requisitos de marketing y SEO, David es responsable de la arquitectura técnica, y Emily lidera el trabajo de diseño.',
     animationDelay: 4000,
     typingSpeed: 10, // Further reduced from 15 to make ellipsis animation even shorter
     isTyping: false,
@@ -100,7 +100,7 @@ export const chatbotResponses: ChatResponse[] = [
   {
     id: 'response-3',
     questionId: 'question-3',
-    answer: 'Puede probar este servicio en https://portfolio-abisay.vercel.app/email-analyzer donde podrá experimentar cómo la IA transforma hilos de email complejos en insights accionables y respuestas automatizadas.',
+    answer: 'Puede probar este servicio en https://portfolio-abisay.vercel.app/email-analyzer donde podrá experimentar cómo la IA transforma hilos de correos complejos en insights accionables y respuestas automatizadas.',
     animationDelay: 6000,
     typingSpeed: 10, // Further reduced from 15 to make ellipsis animation even shorter
     hasUrl: true,

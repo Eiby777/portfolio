@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Navigation from './components/common/Navigation';
+import ParticlesBackground from './components/common/ParticlesBackground';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import EmailAnalyzer from './components/sections/EmailAnalyzer';

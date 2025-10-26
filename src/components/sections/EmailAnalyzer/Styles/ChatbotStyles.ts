@@ -64,11 +64,11 @@ export const getInterpolatedColor = (saturation: number, colorKey: keyof typeof 
 export const ChatbotContainer = styled(motion.div)<{ $saturation: number }>`
   background: ${({ $saturation }) => getInterpolatedColor($saturation, 'background')};
   border-radius: 1rem;
-  padding: 1.5rem;
+  padding: 2rem;
   border: 1px solid ${({ $saturation }) => getInterpolatedColor($saturation, 'border')};
   backdrop-filter: blur(10px);
-  height: 650px; /* Increased from 500px to 650px */
-  width: 450px;   /* Added width to make it wider */
+  height: 750px; /* Increased from 650px to 750px */
+  width: 600px;   /* Increased from 450px to 600px */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -81,9 +81,9 @@ export const ChatbotContainer = styled(motion.div)<{ $saturation: number }>`
 export const ChatHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
@@ -91,15 +91,15 @@ export const ChatHeader = styled.div`
  * Bot icon with dynamic colors
  */
 export const BotIcon = styled(motion.div)<{ $saturation: number }>`
-  width: 50px;     /* Increased from 40px to 50px */
-  height: 50px;    /* Increased from 40px to 50px */
+  width: 60px;     /* Increased from 50px to 60px */
+  height: 60px;    /* Increased from 50px to 60px */
   background: ${({ $saturation }) => getInterpolatedColor($saturation, 'botIcon')};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.4rem; /* Increased from 1.2rem to 1.4rem */
+  font-size: 1.8rem; /* Increased from 1.4rem to 1.8rem */
   transition: background 0.3s ease;
 `;
 
@@ -115,7 +115,7 @@ export const HeaderText = styled.div`
  */
 export const HeaderTitle = styled.h3<{ $saturation: number }>`
   color: ${({ $saturation }) => getInterpolatedColor($saturation, 'text')};
-  font-size: 1.1rem;
+  font-size: 1.4rem; /* Increased from 1.1rem to 1.4rem */
   font-weight: 600;
   margin: 0;
   transition: color 0.3s ease;
@@ -126,8 +126,8 @@ export const HeaderTitle = styled.h3<{ $saturation: number }>`
  */
 export const HeaderSubtitle = styled.p<{ $saturation: number }>`
   color: ${({ $saturation }) => getInterpolatedColor($saturation, 'textSecondary')};
-  font-size: 0.85rem;
-  margin: 0.25rem 0 0 0;
+  font-size: 1rem; /* Increased from 0.85rem to 1rem */
+  margin: 0.5rem 0 0 0;
   transition: color 0.3s ease;
 `;
 
@@ -137,21 +137,21 @@ export const HeaderSubtitle = styled.p<{ $saturation: number }>`
 export const MessagesContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
 
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 6px; /* Increased from 4px to 6px */
   }
 
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: #1a73e8;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 `;
 
@@ -163,11 +163,11 @@ export const MessageBubble = styled(motion.div)<{
   $saturation: number;
 }>`
   max-width: 80%;
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem; /* Increased from 1rem to 1.5rem */
+  padding: 1rem 1.5rem; /* Increased from 0.75rem 1rem */
   border-radius: 1rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 1.1rem; /* Increased from 0.9rem to 1.1rem */
+  line-height: 1.5;
   position: relative;
   transition: all 0.3s ease;
 
@@ -189,9 +189,9 @@ export const MessageBubble = styled(motion.div)<{
  * Message timestamp
  */
 export const MessageTime = styled.span`
-  font-size: 0.75rem;
+  font-size: 0.85rem; /* Increased from 0.75rem to 0.85rem */
   opacity: 0.7;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem; /* Increased from 0.25rem to 0.5rem */
   display: block;
 `;
 
@@ -203,12 +203,12 @@ export const TypingIndicator = styled(motion.div)<{ $saturation: number }>`
   color: ${({ $saturation }) => getInterpolatedColor($saturation, 'text')};
   border: 1px solid ${({ $saturation }) => getInterpolatedColor($saturation, 'border')};
   max-width: 80%;
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem; /* Increased from 1rem to 1.5rem */
+  padding: 1rem 1.5rem; /* Increased from 0.75rem 1rem */
   border-radius: 1rem;
   border-bottom-left-radius: 0.25rem;
   margin-right: auto;
-  font-size: 0.9rem;
+  font-size: 1.1rem; /* Increased from 0.9rem to 1.1rem */
   transition: all 0.3s ease;
 `;
 
@@ -217,7 +217,7 @@ export const TypingIndicator = styled(motion.div)<{ $saturation: number }>`
  */
 export const TypingDots = styled(motion.div)`
   display: flex;
-  gap: 0.25rem;
+  gap: 0.35rem; /* Increased from 0.25rem to 0.35rem */
   align-items: center;
 `;
 
@@ -225,8 +225,8 @@ export const TypingDots = styled(motion.div)`
  * Individual typing dot
  */
 export const TypingDot = styled(motion.div)<{ $saturation: number }>`
-  width: 6px;
-  height: 6px;
+  width: 8px; /* Increased from 6px to 8px */
+  height: 8px; /* Increased from 6px to 8px */
   background: ${({ $saturation }) => getInterpolatedColor($saturation, 'primary')};
   border-radius: 50%;
   transition: background 0.3s ease;
@@ -308,7 +308,7 @@ export const colorTransitionVariants: Variants = {
     filter: 'saturate(1) brightness(1)',
     transition: {
       duration: 0.5,
-      ease: [0, 0, 0.2, 1],
+      ease: [0.4, 0, 0.2, 1],
     },
   },
 };

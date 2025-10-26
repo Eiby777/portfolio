@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
 import Button from '../../ui/Button';
 import AnimationNavigation from '../../ui/AnimationNavigation';
+import AnimatedBackground from '../../common/AnimatedBackground';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container, CtaContainer } from './Styles/EmailAnalyzerStyles';
 import { useSimplifiedAnimation } from './Handlers/useSimplifiedAnimation';
@@ -15,6 +16,7 @@ const EmailAnalyzer: React.FC = () => {
 
   return (
     <ProjectContainer id="email-analyzer" $bgColor={project.bgColor}>
+      <AnimatedBackground type="email" />
       <Container>
         <AnimatePresence mode="wait">
           {phase === 'introduction' && (
