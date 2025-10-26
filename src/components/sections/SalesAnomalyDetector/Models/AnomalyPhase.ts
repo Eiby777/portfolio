@@ -10,8 +10,8 @@ export class AnomalyPhase {
   private readonly _duration: number;
 
   constructor(name: AnomalyPhaseName, duration: number) {
-    if (duration <= 0) {
-      throw new Error('AnomalyPhase duration must be greater than zero');
+    if (duration < 0) {
+      throw new Error('AnomalyPhase duration must be non-negative');
     }
 
     this._name = name;

@@ -6,7 +6,7 @@ const PHASE_DURATIONS: Record<AnomalyPhaseName, number> = {
   'data-analysis': 9000,
   'anomaly-detection': 10000,
   predictions: 8000,
-  cta: 0,
+  cta: 5000,
 };
 
 export const useAnomalyAnimation = () => {
