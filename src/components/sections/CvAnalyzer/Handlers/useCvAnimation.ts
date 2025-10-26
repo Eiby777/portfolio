@@ -22,6 +22,10 @@ export const useCvAnimation = () => {
   const start = useCallback(() => {
     setPhaseIndex(timeline.resetIndex());
     setIsPlaying(true);
+    // Auto-avanzar a la siguiente fase después de un breve delay
+    setTimeout(() => {
+      goToNextPhase();
+    }, 500);
   }, [timeline]);
 
   const goToNextPhase = useCallback(() => {

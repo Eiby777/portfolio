@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useQuoteComparatorAnimation } from './Handlers/useQuoteComparatorAnimation';
@@ -11,7 +12,7 @@ import CtaScene from './Components/CtaScene';
 
 const QuoteComparator: React.FC = () => {
   const project = projects[3];
-  const { phase, isPlaying, start } = useQuoteComparatorAnimation();
+  const { phase, isPlaying, start, goToNextPhase, goToPrevPhase, isFirstPhase, isLastPhase } = useQuoteComparatorAnimation();
 
   return (
     <ProjectContainer id="quote-comparator" $bgColor={project.bgColor}>
@@ -46,6 +47,17 @@ const QuoteComparator: React.FC = () => {
           )}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={goToNextPhase}
+          onPrev={goToPrevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };

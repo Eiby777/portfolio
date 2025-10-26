@@ -5,7 +5,11 @@ import { AnimationWrapper, Title, Description, CtaContainer, PrimaryButton } fro
 import { SummaryCard, ActionItemsGrid, ActionItemCard, OwnerTag, DueDateTag } from '../Styles/FeatureStyles';
 import { MeetingArtifactsFactory } from '../Models/MeetingData';
 
-const ResultsScene: React.FC = () => {
+interface ResultsSceneProps {
+  showCTA?: boolean;
+}
+
+const ResultsScene: React.FC<ResultsSceneProps> = ({ showCTA = false }) => {
   const summary = useMemo(() => MeetingArtifactsFactory.createExecutiveSummary(), []);
   const actionItems = useMemo(() => MeetingArtifactsFactory.createActionItems(), []);
 
@@ -16,10 +20,12 @@ const ResultsScene: React.FC = () => {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.6 }}
     >
-      <Title>Minutas listas para compartir</Title>
+      <Title>{showCTA ? 'Transforma tus reuniones hoy' : 'Minutas listas para compartir'}</Title>
       <Description>
-        Entregamos resúmenes ejecutivos claros con acuerdos clave y responsables asignados en cuestión de segundos.
-        Listos para enviar al equipo.
+        {showCTA 
+          ? 'Lleva tus reuniones al siguiente nivel con transcripción automática y análisis inteligente.'
+          : 'Entregamos resúmenes ejecutivos claros con acuerdos clave y responsables asignados en cuestión de segundos. Listos para enviar al equipo.'
+        }
       </Description>
 
       <SummaryCard
@@ -76,23 +82,25 @@ const ResultsScene: React.FC = () => {
         ))}
       </ActionItemsGrid>
 
-      <CtaContainer
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1.2 }}
-      >
-        <p style={{ color: '#8af6ff', fontSize: '1rem', maxWidth: '520px', textAlign: 'center' }}>
-          Descubre la demo interactiva completa y transforma tus reuniones en decisiones accionables de inmediato.
-        </p>
-        <PrimaryButton
-          whileHover={{ scale: 1.05, boxShadow: '0 24px 60px rgba(0, 255, 255, 0.35)' }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => window.open('https://transcriptor-demo.abisay.dev', '_blank', 'noopener')}
+      {showCTA && (
+        <CtaContainer
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
         >
-          Probar versión completa
-          <FaArrowRight />
-        </PrimaryButton>
-      </CtaContainer>
+          <p style={{ color: '#8af6ff', fontSize: '1rem', maxWidth: '520px', textAlign: 'center' }}>
+            Descubre la demo interactiva completa y transforma tus reuniones en decisiones accionables de inmediato.
+          </p>
+          <PrimaryButton
+            whileHover={{ scale: 1.05, boxShadow: '0 24px 60px rgba(0, 255, 255, 0.35)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.open('https://transcriptor-demo.abisay.dev', '_blank', 'noopener')}
+          >
+            Probar versión completa
+            <FaArrowRight />
+          </PrimaryButton>
+        </CtaContainer>
+      )}
     </AnimationWrapper>
   );
 };

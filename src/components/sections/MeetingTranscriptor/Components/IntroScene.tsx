@@ -38,7 +38,9 @@ const IntroScene: React.FC<IntroSceneProps> = ({ onStart, isPlaying }) => {
           height: '560px',
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, transparent 70%)',
-          filter: 'blur(40px)'
+          filter: 'blur(40px)',
+          pointerEvents: 'none',
+          zIndex: -1
         }}
       />
 
@@ -84,6 +86,7 @@ const IntroScene: React.FC<IntroSceneProps> = ({ onStart, isPlaying }) => {
         whileTap={{ scale: 0.95 }}
         onClick={onStart}
         disabled={isPlaying}
+        style={{ position: 'relative', zIndex: 10 }}
       >
         <FaPlay />
         Ver recorrido inteligente

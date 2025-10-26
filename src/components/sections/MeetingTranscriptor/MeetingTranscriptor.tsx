@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useMeetingAnimation } from './Handlers/useMeetingAnimation';
@@ -9,7 +10,7 @@ import ResultsScene from './Components/ResultsScene';
 
 const MeetingTranscriptor: React.FC = () => {
   const project = projects[5];
-  const { phase, isPlaying, start } = useMeetingAnimation();
+  const { phase, isPlaying, start, goToNextPhase, goToPrevPhase, isFirstPhase, isLastPhase } = useMeetingAnimation();
 
   return (
     <ProjectContainer id="meeting-transcriptor" $bgColor={project.bgColor}>
@@ -21,9 +22,22 @@ const MeetingTranscriptor: React.FC = () => {
 
           {phase === 'analysis' && <AnalysisScene key="analysis-scene" />}
 
-          {(phase === 'results' || phase === 'cta') && <ResultsScene key="results-scene" />}
+          {phase === 'results' && <ResultsScene key="results-scene" showCTA={false} />}
+
+          {phase === 'cta' && <ResultsScene key="cta-scene" showCTA={true} />}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={goToNextPhase}
+          onPrev={goToPrevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };

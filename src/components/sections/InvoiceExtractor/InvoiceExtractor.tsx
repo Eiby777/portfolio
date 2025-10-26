@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useInvoiceAnimation } from './Handlers/useInvoiceAnimation';
@@ -9,7 +10,7 @@ import ExportScene from './Components/ExportScene';
 
 const InvoiceExtractor: React.FC = () => {
   const project = projects[1];
-  const { phase, isPlaying, start } = useInvoiceAnimation();
+  const { phase, isPlaying, start, goToNextPhase, goToPrevPhase, isFirstPhase, isLastPhase } = useInvoiceAnimation();
 
   return (
     <ProjectContainer id="invoice-extractor" $bgColor={project.bgColor}>
@@ -36,6 +37,17 @@ const InvoiceExtractor: React.FC = () => {
           )}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={goToNextPhase}
+          onPrev={goToPrevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };

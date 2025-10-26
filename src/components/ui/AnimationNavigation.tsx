@@ -5,13 +5,11 @@ import styled from 'styled-components';
 import { getContrastColor, rgbaFromHex } from '../../utils/color';
 
 const NavigationControls = styled(motion.div)`
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   gap: 1rem;
-  z-index: 1000;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 1rem 0;
 `;
 
 const NavButton = styled(motion.button)<{

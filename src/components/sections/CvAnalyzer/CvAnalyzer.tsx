@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useCvAnimation } from './Handlers/useCvAnimation';
@@ -11,7 +12,7 @@ import CtaScene from './Components/CtaScene';
 
 const CvAnalyzer: React.FC = () => {
   const project = projects[4];
-  const { phase, isPlaying, start } = useCvAnimation();
+  const { phase, isPlaying, start, goToNextPhase, goToPrevPhase, isFirstPhase, isLastPhase } = useCvAnimation();
 
   return (
     <ProjectContainer id="cv-analyzer" $bgColor={project.bgColor}>
@@ -46,6 +47,17 @@ const CvAnalyzer: React.FC = () => {
           )}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={goToNextPhase}
+          onPrev={goToPrevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };

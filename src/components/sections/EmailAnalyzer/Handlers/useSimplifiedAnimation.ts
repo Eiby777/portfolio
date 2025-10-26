@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 
 export type AnimationPhase = 'introduction' | 'problem-demo' | 'solution-reveal' | 'cta-display';
@@ -12,6 +11,10 @@ export const useSimplifiedAnimation = () => {
   const startAnimation = useCallback(() => {
     setIsPlaying(true);
     setPhase('introduction');
+    // Auto-avanzar a la siguiente fase después de un breve delay
+    setTimeout(() => {
+      nextPhase();
+    }, 500);
   }, []);
 
   const nextPhase = useCallback(() => {

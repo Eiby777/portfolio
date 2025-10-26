@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
 import Button from '../../ui/Button';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container, CtaContainer } from './Styles/EmailAnalyzerStyles';
 import { useSimplifiedAnimation } from './Handlers/useSimplifiedAnimation';
@@ -10,7 +11,7 @@ import SolutionReveal from './Components/SolutionReveal';
 
 const EmailAnalyzer: React.FC = () => {
   const project = projects[0];
-  const { phase, startAnimation } = useSimplifiedAnimation();
+  const { phase, isPlaying, startAnimation, nextPhase, prevPhase, isFirstPhase, isLastPhase } = useSimplifiedAnimation();
 
   return (
     <ProjectContainer id="email-analyzer" $bgColor={project.bgColor}>
@@ -79,6 +80,17 @@ const EmailAnalyzer: React.FC = () => {
           )}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={nextPhase}
+          onPrev={prevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };

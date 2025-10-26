@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import IntroScene from './Components/IntroScene';
@@ -12,7 +13,7 @@ import { SalesAnalyzer, mockSalesData } from './Models/SalesData';
 
 const SalesAnomalyDetector: React.FC = () => {
   const project = projects[6];
-  const { phase, isPlaying, start, goToNextPhase } = useAnomalyAnimation();
+  const { phase, isPlaying, start, goToNextPhase, goToPrevPhase, isFirstPhase, isLastPhase } = useAnomalyAnimation();
 
   const salesData = useMemo(() => {
     const analyzer = new SalesAnalyzer(mockSalesData);
@@ -50,6 +51,17 @@ const SalesAnomalyDetector: React.FC = () => {
           {phase === 'cta' && <CtaScene key="cta" />}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={goToNextPhase}
+          onPrev={goToPrevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };

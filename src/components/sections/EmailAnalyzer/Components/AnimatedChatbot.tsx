@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaRobot, FaArrowRight } from 'react-icons/fa';
 import { useTypingAnimation } from '../Handlers/useTypingAnimation';
@@ -19,23 +19,23 @@ import {
  * Interface for AnimatedChatbot component props
  */
 interface AnimatedChatbotProps {
-  /** Whether the chatbot should start the automated flow */
+  /** Whether chatbot should start of automated flow */
   autoStart?: boolean;
-  /** Delay before starting the automated flow (in milliseconds) */
+  /** Delay before starting of automated flow (in milliseconds) */
   autoStartDelay?: number;
-  /** Callback when the entire automated flow completes */
+  /** Callback when entire automated flow completes */
   onFlowComplete?: () => void;
-  /** Whether the chatbot is visible */
+  /** Whether chatbot is visible */
   isVisible?: boolean;
 }
 
 /**
  * AnimatedChatbot component that displays automated Q&A flow with color transitions
- * @param autoStart - Whether to start the automated flow automatically
- * @param autoStartDelay - Delay before starting the automated flow
+ * @param autoStart - Whether to start automated flow automatically
+ * @param autoStartDelay - Delay before starting automated flow
  * @param onColorTransitionComplete - Callback when color transition completes
  * @param onFlowComplete - Callback when entire flow completes
- * @param isVisible - Whether the chatbot is visible
+ * @param isVisible - Whether chatbot is visible
  */
 const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   autoStart = false,
@@ -45,6 +45,7 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [ellipsisCount, setEllipsisCount] = useState(0);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     messages,
@@ -66,7 +67,7 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   });
 
   /**
-   * Get the text content from a message
+   * Get text content from a message
    */
   const getMessageText = (message: ChatMessageType | ChatResponse): string => {
     if ('question' in message) {
@@ -79,10 +80,12 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
   };
 
   /**
-   * Scroll to bottom when messages change
+   * Scroll to bottom when messages change - uses internal container scroll
    */
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -132,7 +135,7 @@ const AnimatedChatbot: React.FC<AnimatedChatbotProps> = ({
         </HeaderText>
       </ChatHeader>
 
-      <MessagesContainer>
+      <MessagesContainer ref={messagesContainerRef}>
         <AnimatePresence>
           {messages.map((message, index) => {
             const isLastMessage = index === messages.length - 1;

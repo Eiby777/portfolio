@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import AnimationNavigation from '../../ui/AnimationNavigation';
 import { projects } from '../../../data/portfolioData';
 import { ProjectContainer, Container } from './Styles/LayoutStyles';
 import { useChatbotAnimation } from './Handlers/useChatbotAnimation';
@@ -9,7 +10,7 @@ import CtaScene from './Components/CtaScene';
 
 const Chatbot: React.FC = () => {
   const project = projects[2];
-  const { phase, isPlaying, start } = useChatbotAnimation();
+  const { phase, isPlaying, start, goToNextPhase, goToPrevPhase, isFirstPhase, isLastPhase } = useChatbotAnimation();
 
   return (
     <ProjectContainer id="chatbot" $bgColor={project.bgColor}>
@@ -36,6 +37,17 @@ const Chatbot: React.FC = () => {
           )}
         </AnimatePresence>
       </Container>
+      
+      {isPlaying && (
+        <AnimationNavigation
+          primaryColor={project.color}
+          secondaryColor={project.secondaryColor}
+          onNext={goToNextPhase}
+          onPrev={goToPrevPhase}
+          isFirstPhase={isFirstPhase}
+          isLastPhase={isLastPhase}
+        />
+      )}
     </ProjectContainer>
   );
 };
