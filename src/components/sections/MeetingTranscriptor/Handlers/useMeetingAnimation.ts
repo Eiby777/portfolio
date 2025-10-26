@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { MeetingAnimationTimeline } from '../Models/MeetingPhase';
 import type { MeetingPhaseName } from '../Models/MeetingPhase';
 
@@ -23,23 +23,23 @@ export const useMeetingAnimation = () => {
     setIsPlaying(true);
   }, [timeline]);
 
-  useEffect(() => {
-    if (!isPlaying) {
-      return;
-    }
-
-    const currentPhase = timeline.getPhase(phaseIndex);
-    const timeout = window.setTimeout(() => {
-      if (timeline.isLast(phaseIndex)) {
-        setIsPlaying(false);
-        return;
+  const goToNextPhase = useCallback(() => {
+    setPhaseIndex((current) => {
+      if (timeline.isLast(current)) {
+        return current;
       }
+      return timeline.getNextIndex(current);
+    });
+  }, [timeline]);
 
-      setPhaseIndex(timeline.getNextIndex(phaseIndex));
-    }, currentPhase.duration);
-
-    return () => window.clearTimeout(timeout);
-  }, [isPlaying, phaseIndex, timeline]);
+  const goToPrevPhase = useCallback(() => {
+    setPhaseIndex((current) => {
+      if (current <= 0) {
+        return current;
+      }
+      return current - 1;
+    });
+  }, []);
 
   const restart = useCallback(() => {
     setPhaseIndex(timeline.resetIndex());
@@ -47,13 +47,17 @@ export const useMeetingAnimation = () => {
   }, [timeline]);
 
   const phase = timeline.getPhase(phaseIndex).name;
-  const isFinalPhase = timeline.isLast(phaseIndex);
+  const isFirstPhase = phaseIndex === 0;
+  const isLastPhase = timeline.isLast(phaseIndex);
 
   return {
     phase,
     isPlaying,
     start,
     restart,
-    isFinalPhase,
+    goToNextPhase,
+    goToPrevPhase,
+    isFirstPhase,
+    isLastPhase,
   };
 };

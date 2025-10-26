@@ -1,14 +1,9 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 export type AnimationPhase = 'introduction' | 'problem-demo' | 'solution-reveal' | 'cta-display';
 
-const PHASE_DURATIONS = {
-  introduction: 500,
-  'problem-demo': 12000,
-  'solution-reveal': 25000, // Aumentado para dar más tiempo al chatbot
-  'cta-display': 3000,
-};
+const PHASE_ORDER: AnimationPhase[] = ['introduction', 'problem-demo', 'solution-reveal', 'cta-display'];
 
 export const useSimplifiedAnimation = () => {
   const [phase, setPhase] = useState<AnimationPhase>('introduction');
@@ -21,33 +16,34 @@ export const useSimplifiedAnimation = () => {
 
   const nextPhase = useCallback(() => {
     setPhase(current => {
-      switch (current) {
-        case 'introduction':
-          return 'problem-demo';
-        case 'problem-demo':
-          return 'solution-reveal';
-        case 'solution-reveal':
-          return 'cta-display';
-        default:
-          return current;
+      const currentIndex = PHASE_ORDER.indexOf(current);
+      if (currentIndex < PHASE_ORDER.length - 1) {
+        return PHASE_ORDER[currentIndex + 1];
       }
+      return current;
     });
   }, []);
 
-  useEffect(() => {
-    if (!isPlaying) return;
+  const prevPhase = useCallback(() => {
+    setPhase(current => {
+      const currentIndex = PHASE_ORDER.indexOf(current);
+      if (currentIndex > 0) {
+        return PHASE_ORDER[currentIndex - 1];
+      }
+      return current;
+    });
+  }, []);
 
-    const timeout = setTimeout(() => {
-      nextPhase();
-    }, PHASE_DURATIONS[phase]);
-
-    return () => clearTimeout(timeout);
-  }, [phase, isPlaying, nextPhase]);
+  const isFirstPhase = PHASE_ORDER.indexOf(phase) === 0;
+  const isLastPhase = PHASE_ORDER.indexOf(phase) === PHASE_ORDER.length - 1;
 
   return {
     phase,
     isPlaying,
     startAnimation,
     nextPhase,
+    prevPhase,
+    isFirstPhase,
+    isLastPhase,
   };
 };
